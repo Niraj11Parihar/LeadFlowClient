@@ -6,7 +6,7 @@ import { Input } from '../../../components/common/Input';
 import { Select } from '../../../components/common/Select';
 import { Button } from '../../../components/common/Button';
 import { DateTimePicker } from '../../../components/common/DateTimePicker';
-import type { Lead, LeadStage } from '../../../types';
+import type { Lead } from '../../../types';
 import {
   UserIcon as User,
   MailIcon as Mail,
@@ -14,7 +14,6 @@ import {
   BuildingIcon as Building,
   CalendarIcon as Calendar,
   FileTextIcon as FileText,
-  GlobeIcon as Globe,
   LayersIcon as Layers,
 } from '../../../assets/SVGicons';
 
@@ -92,7 +91,6 @@ export const LeadForm: React.FC<LeadFormProps> = ({
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
-      {/* Section 1: Contact Information */}
       <div className="space-y-4">
         <div className="flex items-center gap-3 pb-3 border-b border-slate-100">
           <div className="w-8 h-8 rounded-lg bg-blue-50 text-brand-600 border border-blue-100 flex items-center justify-center shrink-0">
@@ -140,7 +138,6 @@ export const LeadForm: React.FC<LeadFormProps> = ({
         </div>
       </div>
 
-      {/* Section 2: Pipeline */}
       <div className="space-y-4">
         <div className="flex items-center gap-3 pb-3 border-b border-slate-100">
           <div className="w-8 h-8 rounded-lg bg-purple-50 text-purple-600 border border-purple-100 flex items-center justify-center shrink-0">
@@ -183,7 +180,6 @@ export const LeadForm: React.FC<LeadFormProps> = ({
         </div>
       </div>
 
-      {/* Section 3: Follow-up */}
       <div className="space-y-4">
         <div className="flex items-center gap-3 pb-3 border-b border-slate-100">
           <div className="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-600 border border-emerald-100 flex items-center justify-center shrink-0">
@@ -211,7 +207,6 @@ export const LeadForm: React.FC<LeadFormProps> = ({
         </div>
       </div>
 
-      {/* Section 4: Additional Information */}
       <div className="space-y-4">
         <div className="flex items-center gap-3 pb-3 border-b border-slate-100">
           <div className="w-8 h-8 rounded-lg bg-amber-50 text-amber-600 border border-amber-100 flex items-center justify-center shrink-0">
@@ -237,7 +232,6 @@ export const LeadForm: React.FC<LeadFormProps> = ({
         </div>
       </div>
 
-      {/* Form Actions */}
       <div className="flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-end gap-3 pt-4 border-t border-slate-200">
         <Button type="button" variant="outline" onClick={onCancel} className="w-full sm:w-auto">
           Cancel

@@ -53,7 +53,6 @@ export const LoginPage: React.FC = () => {
   return (
     <div className="min-h-screen bg-slate-900 flex items-center justify-center p-4">
       <div className="w-full max-w-md bg-white rounded-xl shadow-dropdown p-5 sm:p-8 border border-slate-200">
-        {/* Logo */}
         <div className="flex flex-col items-center text-center mb-8">
           <div className="w-10 h-10 rounded-lg bg-brand-600 flex items-center justify-center text-white shadow-xs mb-3">
             <Zap className="w-5 h-5 fill-current" />
@@ -105,7 +104,6 @@ export const LoginPage: React.FC = () => {
           </Button>
         </form>
 
-        {/* Demo Account Quick Action */}
         <div className="mt-6 pt-5 border-t border-slate-100 text-center">
           <button
             onClick={fillDemoAccount}

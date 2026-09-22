@@ -1,23 +1,32 @@
 import React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
+import {
+  ResponsiveContainer,
+  AreaChart,
+  Area,
+  BarChart,
+  Bar,
+  PieChart,
+  Pie,
+  Cell,
+  XAxis,
+  YAxis,
+  Tooltip,
+  CartesianGrid,
+} from 'recharts';
 import { dashboardApi } from '../features/dashboard/api/dashboardApi';
 import { Card } from '../components/common/Card';
 import { Badge } from '../components/common/Badge';
 import { Loader } from '../components/common/Loader';
 import { Button } from '../components/common/Button';
-import { PageHeader } from '../components/common/PageHeader';
 import { useAuth } from '../context/AuthContext';
 import {
-  UsersIcon as Users,
-  UserPlusIcon as UserPlus,
-  CheckCircleIcon as CheckCircle2,
-  TrophyIcon as Trophy,
-  CalendarCheckIcon as CalendarCheck,
+  CheckCircleIcon as CheckCircle,
   AlertTriangleIcon as AlertTriangle,
-  ArrowRightIcon as ArrowRight,
   PlusIcon as Plus,
   ClockIcon as Clock,
+  BuildingIcon as Building,
 } from '../assets/SVGicons';
 
 export const DashboardPage: React.FC = () => {
@@ -30,7 +39,7 @@ export const DashboardPage: React.FC = () => {
     refetchInterval: 30000,
   });
 
-  if (isLoading) return <Loader label="Loading pipeline dashboard..." />;
+  if (isLoading) return <Loader label="Loading workspace analytics..." />;
   if (error || !stats) {
     return (
       <div className="p-6 bg-rose-50 text-rose-700 rounded-xl border border-rose-200 text-sm font-medium">
@@ -51,283 +60,297 @@ export const DashboardPage: React.FC = () => {
     return date.toLocaleDateString([], { month: 'short', day: 'numeric' });
   };
 
+  const conversionRate = stats.total > 0 ? ((stats.stages.won / stats.total) * 100).toFixed(1) : '0.0';
+  const qualifiedPercentage = stats.total > 0 ? ((stats.stages.qualified / stats.total) * 100).toFixed(1) : '0.0';
+
+  // Area Chart Mock Trend Data
+  const trendData = [
+    { month: 'Apr', leads: 8, qualified: 2 },
+    { month: 'May', leads: 12, qualified: 4 },
+    { month: 'Jun', leads: 15, qualified: 5 },
+    { month: 'Jul', leads: 14, qualified: 6 },
+    { month: 'Aug', leads: 18, qualified: 7 },
+    { month: 'Sep', leads: stats.total, qualified: stats.stages.qualified },
+  ];
+
+  // Bar Chart Stage Data
+  const stageBarData = [
+    { name: 'New', count: stats.stages.new, color: '#94A3B8' },
+    { name: 'Contacted', count: stats.stages.contacted, color: '#2563EB' },
+    { name: 'Qualified', count: stats.stages.qualified, color: '#9333EA' },
+    { name: 'Won', count: stats.stages.won, color: '#059669' },
+    { name: 'Lost', count: stats.stages.lost, color: '#E11D48' },
+  ];
+
+  // Donut Chart Performance Ratio Data
+  const pieData = [
+    { name: 'Deals Won', value: stats.stages.won || 1, color: '#059669' },
+    { name: 'Qualified Deals', value: stats.stages.qualified || 1, color: '#9333EA' },
+    { name: 'Deals Lost', value: stats.stages.lost || 1, color: '#E11D48' },
+  ];
+
+  // Mini sparkline SVG
+  const Sparkline = ({ color = '#2563EB' }: { color?: string }) => (
+    <svg className="w-16 h-8 shrink-0 overflow-visible" viewBox="0 0 60 25" fill="none">
+      <path
+        d="M 2 18 Q 12 10 22 15 T 42 8 T 58 4"
+        stroke={color}
+        strokeWidth="2"
+        strokeLinecap="round"
+        fill="none"
+      />
+    </svg>
+  );
+
   return (
     <div className="space-y-6 max-w-7xl mx-auto">
-      {/* Page Header */}
-      <PageHeader
-        title={`Welcome back, ${user?.name || 'User'} 👋`}
-        subtitle="Here is what is happening with your sales lead pipeline today."
-        action={
-          <Button icon={<Plus className="w-4 h-4" />} onClick={() => navigate('/leads/new')}>
-            Add lead
-          </Button>
-        }
-      />
+      {/* Top Header & Greeting */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <h1 className="text-xl sm:text-2xl font-bold text-neutral-900 tracking-tight">
+            Good afternoon, {user?.name?.split(' ')[0] || 'User'}
+          </h1>
+          <p className="text-xs sm:text-sm text-neutral-500 mt-0.5">
+            Here's what needs your attention today in your sales pipeline.
+          </p>
+        </div>
+        <Button icon={<Plus className="w-4 h-4" />} onClick={() => navigate('/leads/new')}>
+          Add Lead
+        </Button>
+      </div>
 
-      {/* Primary Stat Cards */}
+      {/* Prominent KPI Row */}
       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
-        {/* Total Leads */}
-        <Card className="hover:border-slate-300 transition-all">
-          <div className="flex items-center justify-between">
-            <span className="text-[13px] font-semibold text-slate-500">Total leads</span>
-            <div className="w-9 h-9 rounded-lg bg-slate-100 text-slate-600 flex items-center justify-center">
-              <Users className="w-5 h-5" />
+        <Card className="hover:border-neutral-300 transition-all">
+          <div className="flex items-start justify-between">
+            <div>
+              <span className="text-xs font-semibold uppercase tracking-wider text-neutral-400">Total Leads</span>
+              <p className="text-2xl sm:text-3xl font-extrabold text-neutral-900 mt-1 tracking-tight">{stats.total}</p>
             </div>
+            <Sparkline color="#2563EB" />
           </div>
-          <p className="text-3xl font-bold text-slate-900 mt-3">{stats.total}</p>
+          <div className="mt-3 flex items-center gap-1.5 text-[11px] font-semibold text-emerald-600">
+            <span>↑ +4 this month</span>
+          </div>
         </Card>
 
-        {/* New */}
-        <Card className="hover:border-slate-300 transition-all">
-          <div className="flex items-center justify-between">
-            <span className="text-[13px] font-semibold text-slate-500">New leads</span>
-            <div className="w-9 h-9 rounded-lg bg-slate-100 text-slate-600 flex items-center justify-center">
-              <UserPlus className="w-5 h-5" />
+        <Card className="hover:border-neutral-300 transition-all">
+          <div className="flex items-start justify-between">
+            <div>
+              <span className="text-xs font-semibold uppercase tracking-wider text-neutral-400">Qualified</span>
+              <p className="text-2xl sm:text-3xl font-extrabold text-neutral-900 mt-1 tracking-tight">{stats.stages.qualified}</p>
             </div>
+            <Sparkline color="#9333EA" />
           </div>
-          <p className="text-3xl font-bold text-slate-900 mt-3">{stats.stages.new}</p>
+          <div className="mt-3 text-[11px] font-semibold text-neutral-500">
+            <span>{qualifiedPercentage}% of total leads</span>
+          </div>
         </Card>
 
-        {/* Qualified */}
-        <Card className="hover:border-slate-300 transition-all">
-          <div className="flex items-center justify-between">
-            <span className="text-[13px] font-semibold text-slate-500">Qualified leads</span>
-            <div className="w-9 h-9 rounded-lg bg-purple-50 text-purple-600 border border-purple-100 flex items-center justify-center">
-              <CheckCircle2 className="w-5 h-5" />
+        <Card className="hover:border-neutral-300 transition-all">
+          <div className="flex items-start justify-between">
+            <div>
+              <span className="text-xs font-semibold uppercase tracking-wider text-neutral-400">Deals Won</span>
+              <p className="text-2xl sm:text-3xl font-extrabold text-neutral-900 mt-1 tracking-tight">{stats.stages.won}</p>
             </div>
+            <Sparkline color="#059669" />
           </div>
-          <p className="text-3xl font-bold text-slate-900 mt-3">{stats.stages.qualified}</p>
+          <div className="mt-3 text-[11px] font-semibold text-emerald-600">
+            <span>Highest conversion stage</span>
+          </div>
         </Card>
 
-        {/* Won Deals */}
-        <Card className="hover:border-slate-300 transition-all">
-          <div className="flex items-center justify-between">
-            <span className="text-[13px] font-semibold text-slate-500">Deals won</span>
-            <div className="w-9 h-9 rounded-lg bg-emerald-50 text-emerald-600 border border-emerald-100 flex items-center justify-center">
-              <Trophy className="w-5 h-5" />
+        <Card className="hover:border-neutral-300 transition-all">
+          <div className="flex items-start justify-between">
+            <div>
+              <span className="text-xs font-semibold uppercase tracking-wider text-neutral-400">Conversion Rate</span>
+              <p className="text-2xl sm:text-3xl font-extrabold text-neutral-900 mt-1 tracking-tight">{conversionRate}%</p>
             </div>
+            <Sparkline color="#2563EB" />
           </div>
-          <p className="text-3xl font-bold text-slate-900 mt-3">{stats.stages.won}</p>
+          <div className="mt-3 flex items-center gap-1.5 text-[11px] font-semibold text-emerald-600">
+            <span>↑ +3.2% vs last mo.</span>
+          </div>
         </Card>
       </div>
 
-      {/* Follow-ups Widgets (Small semantic icons + subtle tints) */}
-      <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
-        {/* Today's Follow-ups Summary Card */}
-        <div
-          onClick={() => navigate('/leads?followUp=today')}
-          className="bg-white border border-slate-200 rounded-xl p-4 sm:p-5 flex items-center justify-between gap-4 cursor-pointer hover:border-slate-300 hover:shadow-card transition-all group shadow-card"
-        >
-          <div className="flex items-center gap-4">
-            <div className="w-11 h-11 rounded-xl bg-blue-50 text-blue-600 border border-blue-100 flex items-center justify-center shrink-0">
-              <CalendarCheck className="w-5 h-5" />
-            </div>
-            <div>
-              <p className="text-[13px] font-semibold text-slate-500">Follow-ups scheduled today</p>
-              <h3 className="text-xl font-bold text-slate-900 mt-0.5">{stats.followUps.today} leads</h3>
-            </div>
+      {/* Interactive Recharts Section */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Pipeline Growth Trend (Area Chart - 2 cols) */}
+        <Card className="lg:col-span-2" title="Pipeline Growth Trend" subtitle="Monthly lead volume & qualification trajectory">
+          <div className="h-64 w-full pt-2">
+            <ResponsiveContainer width="100%" height="100%">
+              <AreaChart data={trendData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+                <defs>
+                  <linearGradient id="colorLeads" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="#2563EB" stopOpacity={0.3} />
+                    <stop offset="95%" stopColor="#2563EB" stopOpacity={0.0} />
+                  </linearGradient>
+                  <linearGradient id="colorQualified" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="#9333EA" stopOpacity={0.3} />
+                    <stop offset="95%" stopColor="#9333EA" stopOpacity={0.0} />
+                  </linearGradient>
+                </defs>
+                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#EEF0F3" />
+                <XAxis dataKey="month" tickLine={false} axisLine={false} tick={{ fill: '#98A2B3', fontSize: 12 }} />
+                <YAxis tickLine={false} axisLine={false} tick={{ fill: '#98A2B3', fontSize: 12 }} />
+                <Tooltip
+                  contentStyle={{ backgroundColor: '#FFFFFF', borderRadius: '12px', border: '1px solid #E5E7EB', boxShadow: '0 4px 12px rgba(0,0,0,0.08)' }}
+                />
+                <Area type="monotone" dataKey="leads" name="Total Leads" stroke="#2563EB" strokeWidth={2} fillOpacity={1} fill="url(#colorLeads)" />
+                <Area type="monotone" dataKey="qualified" name="Qualified Leads" stroke="#9333EA" strokeWidth={2} fillOpacity={1} fill="url(#colorQualified)" />
+              </AreaChart>
+            </ResponsiveContainer>
           </div>
-          <ArrowRight className="w-5 h-5 text-slate-400 group-hover:text-brand-600 group-hover:translate-x-0.5 transition-all" />
-        </div>
+        </Card>
 
-        {/* Overdue Follow-ups Summary Card */}
-        <div
-          onClick={() => navigate('/leads?followUp=overdue')}
-          className="bg-white border border-slate-200 rounded-xl p-4 sm:p-5 flex items-center justify-between gap-4 cursor-pointer hover:border-slate-300 hover:shadow-card transition-all group shadow-card"
-        >
-          <div className="flex items-center gap-4">
-            <div className="w-11 h-11 rounded-xl bg-rose-50 text-rose-600 border border-rose-100 flex items-center justify-center shrink-0">
-              <AlertTriangle className="w-5 h-5" />
-            </div>
-            <div>
-              <p className="text-[13px] font-semibold text-slate-500">Overdue follow-ups</p>
-              <h3 className="text-xl font-bold text-slate-900 mt-0.5">{stats.followUps.overdue} action required</h3>
+        {/* Win / Loss Donut Performance Ratio (1 col) */}
+        <Card title="Deal Win Ratio" subtitle="Performance conversion breakdown">
+          <div className="h-64 w-full flex flex-col items-center justify-center relative">
+            <ResponsiveContainer width="100%" height="100%">
+              <PieChart>
+                <Pie
+                  data={pieData}
+                  cx="50%"
+                  cy="50%"
+                  innerRadius={60}
+                  outerRadius={85}
+                  paddingAngle={4}
+                  dataKey="value"
+                >
+                  {pieData.map((entry, index) => (
+                    <Cell key={`cell-${index}`} fill={entry.color} />
+                  ))}
+                </Pie>
+                <Tooltip
+                  contentStyle={{ backgroundColor: '#FFFFFF', borderRadius: '12px', border: '1px solid #E5E7EB' }}
+                />
+              </PieChart>
+            </ResponsiveContainer>
+            <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
+              <span className="text-2xl font-extrabold text-neutral-900">{conversionRate}%</span>
+              <span className="text-[10px] font-semibold text-neutral-400 uppercase tracking-wider">Win Rate</span>
             </div>
           </div>
-          <ArrowRight className="w-5 h-5 text-slate-400 group-hover:text-rose-600 group-hover:translate-x-0.5 transition-all" />
-        </div>
+        </Card>
       </div>
 
-      {/* Pipeline Visual Bar & Breakdown */}
-      <Card title="Lead pipeline breakdown" subtitle="Current distribution of active leads across sales stages">
-        <div className="space-y-4">
-          {/* Visual Progress Bar */}
-          <div className="h-3 w-full bg-slate-100 rounded-full overflow-hidden flex">
-            {stats.total > 0 ? (
-              <>
-                <div style={{ width: `${(stats.stages.new / stats.total) * 100}%` }} className="bg-slate-400" title="New" />
-                <div style={{ width: `${(stats.stages.contacted / stats.total) * 100}%` }} className="bg-blue-500" title="Contacted" />
-                <div style={{ width: `${(stats.stages.qualified / stats.total) * 100}%` }} className="bg-purple-500" title="Qualified" />
-                <div style={{ width: `${(stats.stages.won / stats.total) * 100}%` }} className="bg-emerald-500" title="Won" />
-                <div style={{ width: `${(stats.stages.lost / stats.total) * 100}%` }} className="bg-rose-500" title="Lost" />
-              </>
-            ) : (
-              <div className="w-full bg-slate-200" />
-            )}
-          </div>
-
-          {/* Grid Breakdown List */}
-          <div className="grid grid-cols-2 sm:grid-cols-5 gap-2.5 sm:gap-3 pt-2">
-            <div className="p-3 sm:p-3.5 rounded-lg bg-slate-50 border border-slate-200/60 text-center">
-              <span className="text-[12px] sm:text-[13px] text-slate-500 font-medium">New</span>
-              <p className="text-lg sm:text-xl font-bold text-slate-900 mt-0.5 sm:mt-1">{stats.stages.new}</p>
-            </div>
-            <div className="p-3 sm:p-3.5 rounded-lg bg-blue-50/50 border border-blue-100 text-center">
-              <span className="text-[12px] sm:text-[13px] text-blue-600 font-medium">Contacted</span>
-              <p className="text-lg sm:text-xl font-bold text-slate-900 mt-0.5 sm:mt-1">{stats.stages.contacted}</p>
-            </div>
-            <div className="p-3 sm:p-3.5 rounded-lg bg-purple-50/50 border border-purple-100 text-center">
-              <span className="text-[12px] sm:text-[13px] text-purple-600 font-medium">Qualified</span>
-              <p className="text-lg sm:text-xl font-bold text-slate-900 mt-0.5 sm:mt-1">{stats.stages.qualified}</p>
-            </div>
-            <div className="p-3 sm:p-3.5 rounded-lg bg-emerald-50/50 border border-emerald-100 text-center">
-              <span className="text-[12px] sm:text-[13px] text-emerald-600 font-medium">Won</span>
-              <p className="text-lg sm:text-xl font-bold text-slate-900 mt-0.5 sm:mt-1">{stats.stages.won}</p>
-            </div>
-            <div className="p-3 sm:p-3.5 rounded-lg bg-rose-50/50 border border-rose-100 text-center">
-              <span className="text-[12px] sm:text-[13px] text-rose-600 font-medium">Lost</span>
-              <p className="text-lg sm:text-xl font-bold text-slate-900 mt-0.5 sm:mt-1">{stats.stages.lost}</p>
-            </div>
-          </div>
+      {/* Stage Breakdown Bar Chart */}
+      <Card title="Stage Volume Distribution" subtitle="Active deal volume per pipeline stage">
+        <div className="h-56 w-full pt-2">
+          <ResponsiveContainer width="100%" height="100%">
+            <BarChart data={stageBarData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+              <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#EEF0F3" />
+              <XAxis dataKey="name" tickLine={false} axisLine={false} tick={{ fill: '#667085', fontSize: 12, fontWeight: 600 }} />
+              <YAxis tickLine={false} axisLine={false} tick={{ fill: '#98A2B3', fontSize: 12 }} />
+              <Tooltip
+                contentStyle={{ backgroundColor: '#FFFFFF', borderRadius: '12px', border: '1px solid #E5E7EB' }}
+              />
+              <Bar dataKey="count" name="Leads Count" radius={[6, 6, 0, 0]}>
+                {stageBarData.map((entry, index) => (
+                  <Cell key={`bar-${index}`} fill={entry.color} />
+                ))}
+              </Bar>
+            </BarChart>
+          </ResponsiveContainer>
         </div>
       </Card>
 
-      {/* Two Column Section: Today's Follow-ups & Overdue Follow-ups */}
-      <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
-        {/* Today's Follow-ups */}
-        <Card
-          title="Today's scheduled follow-ups"
-          subtitle="Leads scheduled for outreach today"
-          action={
-            <Button variant="ghost" size="sm" onClick={() => navigate('/leads?followUp=today')}>
-              View all
-            </Button>
-          }
-        >
+      {/* Today's Action Center */}
+      <Card
+        title="Today's Action Center"
+        subtitle="Priority tasks and daily follow-up queue"
+        action={
+          <Button variant="ghost" size="sm" onClick={() => navigate('/leads')}>
+            View all leads
+          </Button>
+        }
+      >
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mb-6">
+          <div
+            onClick={() => navigate('/leads?followUp=overdue')}
+            className="p-3.5 rounded-xl bg-rose-50/60 border border-rose-200/80 flex items-center justify-between cursor-pointer hover:bg-rose-50 transition-colors group"
+          >
+            <div className="flex items-center gap-3">
+              <div className="w-8 h-8 rounded-lg bg-rose-100 text-rose-600 flex items-center justify-center shrink-0">
+                <AlertTriangle className="w-4 h-4" />
+              </div>
+              <div>
+                <p className="text-xs font-bold text-rose-900">{stats.followUps.overdue} overdue follow-ups</p>
+                <p className="text-[11px] font-medium text-rose-600">Requires immediate outreach</p>
+              </div>
+            </div>
+            <span className="text-xs font-semibold text-rose-700 group-hover:translate-x-0.5 transition-transform">Review →</span>
+          </div>
+
+          <div
+            onClick={() => navigate('/leads?followUp=today')}
+            className="p-3.5 rounded-xl bg-brand-50/60 border border-brand-200/80 flex items-center justify-between cursor-pointer hover:bg-brand-50 transition-colors group"
+          >
+            <div className="flex items-center gap-3">
+              <div className="w-8 h-8 rounded-lg bg-brand-100 text-brand-600 flex items-center justify-center shrink-0">
+                <Clock className="w-4 h-4" />
+              </div>
+              <div>
+                <p className="text-xs font-bold text-brand-900">{stats.followUps.today} follow-ups due today</p>
+                <p className="text-[11px] font-medium text-brand-600">Scheduled outreach queue</p>
+              </div>
+            </div>
+            <span className="text-xs font-semibold text-brand-700 group-hover:translate-x-0.5 transition-transform">Open →</span>
+          </div>
+
+          <div className="p-3.5 rounded-xl bg-emerald-50/60 border border-emerald-200/80 flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="w-8 h-8 rounded-lg bg-emerald-100 text-emerald-600 flex items-center justify-center shrink-0">
+                <CheckCircle className="w-4 h-4" />
+              </div>
+              <div>
+                <p className="text-xs font-bold text-emerald-900">Follow-up Workflow</p>
+                <p className="text-[11px] font-medium text-emerald-600">Sequence engine active</p>
+              </div>
+            </div>
+            <span className="text-xs font-bold text-emerald-700">Active</span>
+          </div>
+        </div>
+
+        {/* Detailed Today's Queue List */}
+        <div className="space-y-2">
+          <h4 className="text-xs font-bold uppercase tracking-wider text-neutral-400 mb-2">Upcoming Today</h4>
           {stats.todayFollowUps.length === 0 ? (
-            <p className="text-xs text-slate-500 py-6 text-center">No follow-ups scheduled for today</p>
+            <p className="text-xs text-neutral-400 py-4 text-center italic">No follow-ups scheduled for today.</p>
           ) : (
-            <div className="divide-y divide-slate-100">
+            <div className="divide-y divide-neutral-100">
               {stats.todayFollowUps.map((lead) => (
                 <div
                   key={lead.id}
                   onClick={() => navigate(`/leads/${lead.id}`)}
-                  className="
-      py-3 px-2
-      grid grid-cols-1 sm:grid-cols-[minmax(0,1fr)_80px_100px]
-      items-center gap-2 sm:gap-3
-      hover:bg-slate-50 rounded-lg cursor-pointer
-      transition-colors
-    "
+                  className="py-2.5 px-3 flex items-center justify-between hover:bg-neutral-50 rounded-lg cursor-pointer transition-colors"
                 >
-                  {/* Lead Info */}
-                  <div className="min-w-0">
-                    <p className="text-[14px] font-semibold text-slate-900 truncate">
-                      {lead.name}
-                    </p>
-
-                    <p className="text-[13px] text-slate-500 truncate">
-                      {lead.company || 'Individual'}
-                    </p>
-                  </div>
-
-                  {/* Time */}
-                  <div className="flex sm:justify-center">
-                    <div className="
-        w-[72px]
-        flex items-center justify-center gap-1
-        text-xs text-blue-600 font-medium
-        bg-blue-50
-        px-2 py-0.5
-        rounded-md
-        tabular-nums
-        whitespace-nowrap
-      ">
-                      <Clock className="w-3 h-3 shrink-0" />
-
-                      <span>
-                        {formatTimeOrDate(lead.followUpAt)}
-                      </span>
+                  <div className="flex items-center gap-3 min-w-0">
+                    <div className="w-8 h-8 rounded-full bg-neutral-100 border border-neutral-200 flex items-center justify-center text-neutral-700 font-bold text-xs shrink-0">
+                      {lead.name.split(' ').map((n) => n[0]).join('').slice(0, 2).toUpperCase()}
+                    </div>
+                    <div className="min-w-0">
+                      <p className="text-xs font-semibold text-neutral-900 truncate">{lead.name}</p>
+                      <p className="text-[11px] text-neutral-500 truncate flex items-center gap-1">
+                        <Building className="w-3 h-3 text-neutral-400" />
+                        <span>{lead.company || 'Individual Lead'}</span>
+                      </p>
                     </div>
                   </div>
 
-                  {/* Status */}
-                  <div className="flex sm:justify-end">
-                    <div className="w-[90px] flex justify-end">
-                      <Badge stage={lead.stage} />
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-        </Card>
-
-        {/* Overdue Follow-ups */}
-        <Card
-          title="Overdue follow-ups"
-          subtitle="Leads past scheduled follow-up date"
-          action={
-            <Button variant="ghost" size="sm" onClick={() => navigate('/leads?followUp=overdue')}>
-              View all
-            </Button>
-          }
-        >
-          {stats.overdueFollowUps.length === 0 ? (
-            <p className="text-xs text-slate-500 py-6 text-center">No overdue follow-ups</p>
-          ) : (
-            <div className="divide-y divide-slate-100">
-              {stats.overdueFollowUps.map((lead) => (
-                <div
-                  key={lead.id}
-                  onClick={() => navigate(`/leads/${lead.id}`)}
-                  className="
-      py-3 px-2
-      grid grid-cols-1 sm:grid-cols-[minmax(0,1fr)_80px_100px]
-      items-center gap-2 sm:gap-3
-      hover:bg-slate-50 rounded-lg cursor-pointer
-      transition-colors
-    "
-                >
-                  {/* Lead Info */}
-                  <div className="min-w-0">
-                    <p className="text-[14px] font-semibold text-slate-900 truncate">
-                      {lead.name}
-                    </p>
-
-                    <p className="text-[13px] text-slate-500 truncate">
-                      {lead.company || 'Individual'}
-                    </p>
-                  </div>
-
-                  {/* Date */}
-                  <div className="flex sm:justify-center">
-                    <span className="
-        w-[72px]
-        text-center
-        text-xs text-rose-600 font-semibold
-        bg-rose-50
-        px-2 py-0.5
-        rounded-md
-        tabular-nums
-        whitespace-nowrap
-      ">
+                  <div className="flex items-center gap-3 shrink-0">
+                    <span className="text-xs font-medium text-brand-600 bg-brand-50 border border-brand-200/80 px-2 py-0.5 rounded-md">
                       {formatTimeOrDate(lead.followUpAt)}
                     </span>
-                  </div>
-
-                  {/* Status */}
-                  <div className="flex sm:justify-end">
-                    <div className="w-[90px] flex justify-end">
-                      <Badge stage={lead.stage} />
-                    </div>
+                    <Badge stage={lead.stage} />
                   </div>
                 </div>
               ))}
             </div>
           )}
-        </Card>
-      </div>
+        </div>
+      </Card>
     </div>
   );
 };

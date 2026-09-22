@@ -29,7 +29,6 @@ export const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, children }
   return createPortal(
     <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-xs animate-fade-in">
       <div className="relative w-full max-w-md bg-white rounded-xl shadow-popover border border-slate-200 overflow-hidden">
-        {/* Header */}
         <div className="flex items-center justify-between px-6 py-4 border-b border-slate-100">
           <h3 className="text-base font-semibold text-slate-900">{title}</h3>
           <button
@@ -40,7 +39,6 @@ export const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, children }
           </button>
         </div>
 
-        {/* Content */}
         <div className="px-6 py-4">{children}</div>
       </div>
     </div>,

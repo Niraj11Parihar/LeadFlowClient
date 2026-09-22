@@ -54,7 +54,6 @@ export const ConfirmModal: React.FC<ConfirmModalProps> = ({
 
   if (!isOpen) return null;
 
-  // Variant design styles
   const variantStyles = {
     danger: {
       badgeBg: 'bg-rose-50 text-rose-600 border-rose-200/80',
@@ -84,7 +83,6 @@ export const ConfirmModal: React.FC<ConfirmModalProps> = ({
   const modalContent = (
     <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-xs animate-fade-in">
       <div className="relative w-full max-w-md bg-white rounded-xl shadow-dropdown border border-slate-200 overflow-hidden transform transition-all">
-        {/* Close Button */}
         <button
           onClick={onClose}
           disabled={isLoading}
@@ -94,7 +92,6 @@ export const ConfirmModal: React.FC<ConfirmModalProps> = ({
         </button>
 
         <div className="p-6">
-          {/* Badge Icon & Header */}
           <div className="flex items-start gap-4">
             <div
               className={`w-10 h-10 rounded-lg flex items-center justify-center border shrink-0 ${style.badgeBg}`}
@@ -109,7 +106,6 @@ export const ConfirmModal: React.FC<ConfirmModalProps> = ({
             </div>
           </div>
 
-          {/* Action Buttons */}
           <div className="flex items-center justify-end gap-2.5 mt-6 pt-4 border-t border-slate-100">
             <Button
               variant="outline"

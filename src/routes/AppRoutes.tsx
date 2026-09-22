@@ -7,17 +7,20 @@ import { LeadsPage } from '../pages/LeadsPage';
 import { LeadCreatePage } from '../pages/LeadCreatePage';
 import { LeadDetailsPage } from '../pages/LeadDetailsPage';
 import { LeadEditPage } from '../pages/LeadEditPage';
+import { KanbanPage } from '../pages/KanbanPage';
+import { CompaniesPage } from '../pages/CompaniesPage';
+import { TasksPage } from '../pages/TasksPage';
+import { ActivitiesPage } from '../pages/ActivitiesPage';
+import { SettingsPage } from '../pages/SettingsPage';
 import { AppLayout } from '../components/layout/AppLayout';
 import { ProtectedRoute } from './ProtectedRoute';
 
 export const AppRoutes: React.FC = () => {
   return (
     <Routes>
-      {/* Public Auth Routes */}
       <Route path="/auth/login" element={<LoginPage />} />
       <Route path="/auth/register" element={<RegisterPage />} />
 
-      {/* Protected Main App Routes */}
       <Route
         path="/"
         element={
@@ -32,9 +35,13 @@ export const AppRoutes: React.FC = () => {
         <Route path="leads/new" element={<LeadCreatePage />} />
         <Route path="leads/:id" element={<LeadDetailsPage />} />
         <Route path="leads/:id/edit" element={<LeadEditPage />} />
+        <Route path="kanban" element={<KanbanPage />} />
+        <Route path="companies" element={<CompaniesPage />} />
+        <Route path="tasks" element={<TasksPage />} />
+        <Route path="activities" element={<ActivitiesPage />} />
+        <Route path="settings" element={<SettingsPage />} />
       </Route>
 
-      {/* Fallback */}
       <Route path="*" element={<Navigate to="/dashboard" replace />} />
     </Routes>
   );

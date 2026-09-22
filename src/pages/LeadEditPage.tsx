@@ -60,7 +60,6 @@ export const LeadEditPage: React.FC = () => {
 
   return (
     <div className="w-full space-y-6">
-      {/* Top Header */}
       <PageHeader
         title={`Edit lead — ${lead.name}`}
         subtitle="Update contact info, stage, or follow-up schedule"
@@ -81,7 +80,6 @@ export const LeadEditPage: React.FC = () => {
         </div>
       )}
 
-      {/* Form Container */}
       <Card className="p-6 sm:p-8">
         <LeadForm
           initialData={lead}
@@ -91,7 +89,6 @@ export const LeadEditPage: React.FC = () => {
         />
       </Card>
 
-      {/* Confirmation Modal for Update */}
       <ConfirmModal
         isOpen={!!pendingData}
         onClose={() => setPendingData(null)}

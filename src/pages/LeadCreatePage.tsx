@@ -32,7 +32,6 @@ export const LeadCreatePage: React.FC = () => {
 
   return (
     <div className="w-full space-y-6">
-      {/* Top Page Header */}
       <PageHeader
         title="Create new lead"
         subtitle="Fill in the contact information, pipeline details, and follow-up schedule"
@@ -53,7 +52,6 @@ export const LeadCreatePage: React.FC = () => {
         </div>
       )}
 
-      {/* Form Container */}
       <Card className="p-6 sm:p-8">
         <LeadForm
           onSubmit={handleSubmit}

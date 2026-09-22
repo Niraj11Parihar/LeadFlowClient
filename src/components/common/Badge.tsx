@@ -9,11 +9,11 @@ interface BadgeProps {
 
 export const Badge: React.FC<BadgeProps> = ({ stage, className }) => {
   const styles: Record<LeadStage, string> = {
-    NEW: 'bg-slate-100 text-slate-700 border-slate-200/80',
-    CONTACTED: 'bg-blue-50 text-blue-700 border-blue-200/80',
-    QUALIFIED: 'bg-purple-50 text-purple-700 border-purple-200/80',
-    WON: 'bg-emerald-50 text-emerald-700 border-emerald-200/80',
-    LOST: 'bg-rose-50 text-rose-700 border-rose-200/80',
+    NEW: 'bg-neutral-100 text-neutral-700 border-neutral-200',
+    CONTACTED: 'bg-brand-50 text-brand-700 border-brand-200',
+    QUALIFIED: 'bg-purple-50 text-purple-700 border-purple-200',
+    WON: 'bg-emerald-50 text-emerald-700 border-emerald-200',
+    LOST: 'bg-rose-50 text-rose-700 border-rose-200',
   };
 
   const labels: Record<LeadStage, string> = {

@@ -94,7 +94,6 @@ export const CompleteFollowUpModal: React.FC<CompleteFollowUpModalProps> = ({
   return createPortal(
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-in fade-in duration-200">
       <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-2xl max-w-lg w-full border border-slate-200 dark:border-slate-800 overflow-hidden flex flex-col max-h-[90vh]">
-        {/* Header */}
         <div className="px-6 py-4 border-b border-slate-100 dark:border-slate-800 flex justify-between items-center bg-slate-50/50 dark:bg-slate-800/50">
           <div>
             <h2 className="text-lg font-semibold text-slate-900 dark:text-slate-100">
@@ -113,7 +112,6 @@ export const CompleteFollowUpModal: React.FC<CompleteFollowUpModalProps> = ({
           </button>
         </div>
 
-        {/* Body */}
         <form onSubmit={handleSubmit} className="p-6 overflow-y-auto space-y-4">
           {error && (
             <div className="p-3 bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-900 text-rose-700 dark:text-rose-300 rounded-xl text-xs flex items-center gap-2">
@@ -122,7 +120,6 @@ export const CompleteFollowUpModal: React.FC<CompleteFollowUpModalProps> = ({
             </div>
           )}
 
-          {/* Medium selection & suggestions */}
           <div>
             <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
               Communication Medium
@@ -153,7 +150,6 @@ export const CompleteFollowUpModal: React.FC<CompleteFollowUpModalProps> = ({
             </div>
           </div>
 
-          {/* Discussion Notes */}
           <div>
             <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
               Discussion Notes / Summary <span className="text-rose-500">*</span>
@@ -168,7 +164,6 @@ export const CompleteFollowUpModal: React.FC<CompleteFollowUpModalProps> = ({
             />
           </div>
 
-          {/* Outcome / Result */}
           <div>
             <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
               Outcome / Key Result (Optional)
@@ -182,7 +177,6 @@ export const CompleteFollowUpModal: React.FC<CompleteFollowUpModalProps> = ({
             />
           </div>
 
-          {/* Update Stage */}
           <div>
             <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
               Lead Stage Status
@@ -195,7 +189,6 @@ export const CompleteFollowUpModal: React.FC<CompleteFollowUpModalProps> = ({
             />
           </div>
 
-          {/* Schedule Next Follow-up Section */}
           <div className="pt-2 border-t border-slate-100 dark:border-slate-800">
             <div className="flex items-center justify-between mb-3">
               <label className="text-xs font-semibold text-slate-800 dark:text-slate-200 flex items-center gap-1.5 cursor-pointer">
@@ -218,7 +211,6 @@ export const CompleteFollowUpModal: React.FC<CompleteFollowUpModalProps> = ({
             )}
           </div>
 
-          {/* Modal Footer */}
           <div className="flex items-center justify-end gap-3 pt-4 border-t border-slate-100 dark:border-slate-800">
             <Button type="button" variant="outline" onClick={onClose} disabled={isSubmitting}>
               Cancel

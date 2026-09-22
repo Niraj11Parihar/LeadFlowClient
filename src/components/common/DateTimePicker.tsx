@@ -7,7 +7,7 @@ import { twMerge } from 'tailwind-merge';
 
 export interface DateTimePickerProps {
   label?: string;
-  value?: string; // ISO string or YYYY-MM-DDTHH:mm
+  value?: string;
   onChange?: (val: string) => void;
   error?: string;
   placeholder?: string;
@@ -24,7 +24,6 @@ export const DateTimePicker: React.FC<DateTimePickerProps> = ({
 }) => {
   const [isOpen, setIsOpen] = useState(false);
 
-  // Parsed date state
   const initialDate = value ? new Date(value) : new Date();
   const isValidInitial = value && !isNaN(initialDate.getTime());
 
@@ -51,7 +50,7 @@ export const DateTimePicker: React.FC<DateTimePickerProps> = ({
   const month = viewDate.getMonth();
 
   const daysInMonth = new Date(year, month + 1, 0).getDate();
-  const firstDayOfWeek = new Date(year, month, 1).getDay(); // 0 is Sun
+  const firstDayOfWeek = new Date(year, month, 1).getDay();
 
   const monthNames = [
     'January', 'February', 'March', 'April', 'May', 'June',
@@ -151,7 +150,6 @@ export const DateTimePicker: React.FC<DateTimePickerProps> = ({
             align="start"
             className="z-50 w-72 rounded-xl border border-slate-200 bg-white p-4 shadow-dropdown animate-fade-in text-slate-900"
           >
-            {/* Calendar Header */}
             <div className="flex items-center justify-between pb-3 border-b border-slate-100">
               <span className="text-sm font-semibold text-slate-900">
                 {monthNames[month]} {year}
@@ -174,7 +172,6 @@ export const DateTimePicker: React.FC<DateTimePickerProps> = ({
               </div>
             </div>
 
-            {/* Days of Week */}
             <div className="grid grid-cols-7 gap-1 text-center py-2">
               {['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'].map((d) => (
                 <span key={d} className="text-[11px] font-semibold text-slate-400 uppercase">
@@ -183,7 +180,6 @@ export const DateTimePicker: React.FC<DateTimePickerProps> = ({
               ))}
             </div>
 
-            {/* Days Grid */}
             <div className="grid grid-cols-7 gap-1 text-center">
               {Array.from({ length: firstDayOfWeek }).map((_, i) => (
                 <div key={`empty-${i}`} />
@@ -222,7 +218,6 @@ export const DateTimePicker: React.FC<DateTimePickerProps> = ({
               })}
             </div>
 
-            {/* Time Selector */}
             <div className="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs">
               <div className="flex items-center gap-1 text-slate-600 font-medium">
                 <Clock className="w-3.5 h-3.5 text-slate-400" />
@@ -230,7 +225,6 @@ export const DateTimePicker: React.FC<DateTimePickerProps> = ({
               </div>
 
               <div className="flex items-center gap-1">
-                {/* Hours Select */}
                 <select
                   value={selectedHour}
                   onChange={(e) => handleTimeChange(Number(e.target.value), selectedMinute)}
@@ -245,7 +239,6 @@ export const DateTimePicker: React.FC<DateTimePickerProps> = ({
 
                 <span>:</span>
 
-                {/* Minutes Select */}
                 <select
                   value={selectedMinute}
                   onChange={(e) => handleTimeChange(selectedHour, Number(e.target.value))}
@@ -260,7 +253,6 @@ export const DateTimePicker: React.FC<DateTimePickerProps> = ({
               </div>
             </div>
 
-            {/* Footer Action */}
             <div className="mt-4 flex items-center justify-between pt-2 border-t border-slate-100">
               <button
                 type="button"

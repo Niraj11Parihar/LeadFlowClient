@@ -54,7 +54,6 @@ export const leadApi = {
     return response.data.data;
   },
 
-  // Follow-ups API
   getFollowUps: async (leadId: string, page = 1, limit = 10): Promise<PaginatedResponse<FollowUp>> => {
     const response = await api.get<ApiResponse<FollowUp[]>>(`/leads/${leadId}/follow-ups?page=${page}&limit=${limit}`);
     return {
@@ -108,7 +107,6 @@ export const leadApi = {
     return response.data.data;
   },
 
-  // Activities API
   getActivities: async (leadId: string, page = 1, limit = 20): Promise<PaginatedResponse<LeadActivity>> => {
     const response = await api.get<ApiResponse<LeadActivity[]>>(`/leads/${leadId}/activities?page=${page}&limit=${limit}`);
     return {

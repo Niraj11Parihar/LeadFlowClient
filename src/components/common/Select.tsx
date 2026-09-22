@@ -1,4 +1,4 @@
-import React, { forwardRef } from 'react';
+import { forwardRef } from 'react';
 import * as RadixSelect from '@radix-ui/react-select';
 import { ChevronDownIcon as ChevronDown, CheckIcon as Check } from '../../assets/SVGicons';
 import { clsx } from 'clsx';

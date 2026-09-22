@@ -1,4 +1,3 @@
-// LeadFlow CRM Design System Tokens (B2B International SaaS Standard)
 
 export const themeTokens = {
   colors: {
@@ -9,9 +8,9 @@ export const themeTokens = {
     surface: '#FFFFFF',        // Pure white card/table surface
     textPrimary: '#0F172A',    // Dark slate headings/body text
     textSecondary: '#475569',  // Medium slate secondary labels
-    textMuted: '#94A3B8',      // Light slate placeholders/icons
+    textMuted: '#8b8c8fff',      // Light slate placeholders/icons
     border: '#E2E8F0',         // Subtle neutral border
-    focusRing: 'rgba(59, 130, 246, 0.25)', // Subtle blue focus halo
+    focusRing: 'rgba(10, 12, 15, 0.25)', // Subtle blue focus halo
     sidebar: '#0F172A',        // Dark slate sidebar background
     sidebarSecondary: '#172033', // Darker slate sidebar card/nav
     success: '#059669',        // Emerald success
