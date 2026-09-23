@@ -13,8 +13,6 @@ import {
   BuildingIcon as Building,
   CalendarIcon as Calendar,
   ArrowUpDownIcon as ArrowUpDown,
-  TableIcon as TableIcon,
-  KanbanIcon as KanbanIcon,
 } from '../assets/SVGicons';
 import { leadApi } from '../features/leads/api/leadApi';
 import { dashboardApi } from '../features/dashboard/api/dashboardApi';
@@ -27,7 +25,6 @@ import { Loader } from '../components/common/Loader';
 import { Pagination } from '../components/common/Pagination';
 import { ConfirmModal } from '../components/common/ConfirmModal';
 import { DropdownMenu } from '../components/common/DropdownMenu';
-import { KanbanBoard } from '../features/leads/components/KanbanBoard';
 import type { Lead, LeadStage, LeadFilters } from '../types';
 
 const FOLLOWUP_FILTER_OPTIONS = [
@@ -51,7 +48,6 @@ export const LeadsPage: React.FC = () => {
   const queryClient = useQueryClient();
   const [searchParams] = useSearchParams();
 
-  const [viewMode, setViewMode] = useState<'table' | 'kanban'>('table');
   const [page, setPage] = useState<number>(Number(searchParams.get('page')) || 1);
   const [searchInput, setSearchInput] = useState<string>(searchParams.get('search') || '');
   const [searchQuery, setSearchQuery] = useState<string>(searchParams.get('search') || '');
@@ -73,8 +69,8 @@ export const LeadsPage: React.FC = () => {
   };
 
   const filters: LeadFilters = {
-    page: viewMode === 'kanban' ? 1 : page,
-    limit: viewMode === 'kanban' ? 100 : 15,
+    page,
+    limit: 15,
     search: searchQuery.trim() || undefined,
     stage: stage || undefined,
     followUp: (followUp as any) || undefined,
@@ -92,14 +88,6 @@ export const LeadsPage: React.FC = () => {
     queryFn: dashboardApi.getStats,
   });
 
-  const updateStageMutation = useMutation({
-    mutationFn: ({ id, newStage }: { id: string; newStage: LeadStage }) =>
-      leadApi.updateLead(id, { stage: newStage }),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['leads'] });
-      queryClient.invalidateQueries({ queryKey: ['dashboard'] });
-    },
-  });
 
   const deleteMutation = useMutation({
     mutationFn: (id: string) => leadApi.deleteLead(id),
@@ -158,31 +146,6 @@ export const LeadsPage: React.FC = () => {
         </div>
 
         <div className="flex items-center gap-3">
-          <div className="flex items-center bg-neutral-100 p-1 rounded-lg border border-neutral-200">
-            <button
-              type="button"
-              onClick={() => setViewMode('table')}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-semibold transition-all cursor-pointer ${viewMode === 'table'
-                ? 'bg-white text-neutral-900 shadow-xs'
-                : 'text-neutral-500 hover:text-neutral-900'
-                }`}
-            >
-              <TableIcon className="w-3.5 h-3.5" />
-              <span>Table</span>
-            </button>
-            <button
-              type="button"
-              onClick={() => setViewMode('kanban')}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-semibold transition-all cursor-pointer ${viewMode === 'kanban'
-                ? 'bg-white text-neutral-900 shadow-xs'
-                : 'text-neutral-500 hover:text-neutral-900'
-                }`}
-            >
-              <KanbanIcon className="w-3.5 h-3.5" />
-              <span>Kanban</span>
-            </button>
-          </div>
-
           <Button onClick={() => navigate('/leads/new')} icon={<Plus className="w-4 h-4" />}>
             Add Lead
           </Button>
@@ -289,13 +252,6 @@ export const LeadsPage: React.FC = () => {
             Reset Filters
           </Button>
         </Card>
-      ) : viewMode === 'kanban' ? (
-        /* Visual Drag and Drop Kanban View */
-        <KanbanBoard
-          leads={data?.data || []}
-          onStageChange={(id, newStage) => updateStageMutation.mutate({ id, newStage })}
-          onDeleteLead={(id) => setDeleteLeadId(id)}
-        />
       ) : (
         /* Table View */
         <div className="space-y-4">
