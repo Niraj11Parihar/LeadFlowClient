@@ -158,6 +158,31 @@ export const LeadsPage: React.FC = () => {
         </div>
 
         <div className="flex items-center gap-3">
+          <div className="flex items-center bg-neutral-100 p-1 rounded-lg border border-neutral-200">
+            <button
+              type="button"
+              onClick={() => setViewMode('table')}
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-semibold transition-all cursor-pointer ${viewMode === 'table'
+                ? 'bg-white text-neutral-900 shadow-xs'
+                : 'text-neutral-500 hover:text-neutral-900'
+                }`}
+            >
+              <TableIcon className="w-3.5 h-3.5" />
+              <span>Table</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => setViewMode('kanban')}
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-semibold transition-all cursor-pointer ${viewMode === 'kanban'
+                ? 'bg-white text-neutral-900 shadow-xs'
+                : 'text-neutral-500 hover:text-neutral-900'
+                }`}
+            >
+              <KanbanIcon className="w-3.5 h-3.5" />
+              <span>Kanban</span>
+            </button>
+          </div>
+
           <Button onClick={() => navigate('/leads/new')} icon={<Plus className="w-4 h-4" />}>
             Add Lead
           </Button>
