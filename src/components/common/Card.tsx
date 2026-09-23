@@ -17,7 +17,7 @@ export const Card: React.FC<CardProps> = ({ children, className, title, subtitle
       onClick={onClick}
       className={twMerge(
         clsx(
-          'bg-white rounded-xl border border-neutral-200/80 shadow-xs p-5 transition-all',
+          'bg-white rounded-xl border border-slate-200/90 shadow-[0_1px_2px_rgba(15,23,42,0.04),0_1px_3px_rgba(15,23,42,0.06)] p-5 transition-all',
           className
         )
       )}

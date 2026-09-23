@@ -38,8 +38,8 @@
   }
 
   body {
-    background-color: #F7F8FA;
-    color: #111827;
+    background-color: #F1F5F9;
+    color: #0F172A;
     @apply antialiased selection:bg-brand-500 selection:text-white;
   }
 }

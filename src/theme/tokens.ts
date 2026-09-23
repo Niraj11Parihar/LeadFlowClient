@@ -1,22 +1,22 @@
 
 export const themeTokens = {
   colors: {
-    primary: '#2563EB',        // Main brand action blue
-    primaryHover: '#1D4ED8',   // Hover state blue
-    primarySoft: '#EFF6FF',    // Light tinted blue background
-    background: '#F8FAFC',     // Clean slate app background
-    surface: '#FFFFFF',        // Pure white card/table surface
-    textPrimary: '#0F172A',    // Dark slate headings/body text
-    textSecondary: '#475569',  // Medium slate secondary labels
-    textMuted: '#8b8c8fff',      // Light slate placeholders/icons
-    border: '#E2E8F0',         // Subtle neutral border
-    focusRing: 'rgba(10, 12, 15, 0.25)', // Subtle blue focus halo
-    sidebar: '#0F172A',        // Dark slate sidebar background
-    sidebarSecondary: '#172033', // Darker slate sidebar card/nav
-    success: '#059669',        // Emerald success
-    warning: '#D97706',        // Amber warning
-    danger: '#E11D48',         // Rose/Red danger
-    purple: '#7C3AED',         // Purple stage highlight
+    primary: '#2563EB',
+    primaryHover: '#1D4ED8',
+    primarySoft: '#EFF6FF',
+    background: '#F1F5F9',
+    surface: '#FFFFFF',
+    textPrimary: '#0F172A',
+    textSecondary: '#475569',
+    textMuted: '#94A3B8',
+    border: '#E2E8F0',
+    focusRing: 'rgba(37, 99, 235, 0.18)',
+    sidebar: '#0F172A',
+    sidebarSecondary: '#1E293B',
+    success: '#059669',
+    warning: '#D97706',
+    danger: '#E11D48',
+    purple: '#7C3AED',
   },
   typography: {
     fontFamily: "'Inter', system-ui, -apple-system, sans-serif",
@@ -24,7 +24,7 @@ export const themeTokens = {
       fontSize: '12px',
       fontWeight: '600',
       letterSpacing: '0',
-      transform: 'none', // Sentence case, avoid all-caps
+      transform: 'none',
     },
     body: {
       fontSize: '14px',
@@ -38,9 +38,9 @@ export const themeTokens = {
     },
   },
   controls: {
-    height: '40px',          // 40px standard input/button height
-    borderRadius: '8px',     // 8px rounded corners
-    tableRowHeight: '56px',  // 56-60px row height
+    height: '40px',
+    borderRadius: '8px',
+    tableRowHeight: '56px',
   },
   spacing: {
     4: '4px',

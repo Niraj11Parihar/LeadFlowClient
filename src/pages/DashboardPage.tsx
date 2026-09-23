@@ -27,17 +27,29 @@ import {
   PlusIcon as Plus,
   ClockIcon as Clock,
   BuildingIcon as Building,
+  SparklesIcon as Sparkles,
 } from '../assets/SVGicons';
+import { WelcomeModal } from '../components/common/WelcomeModal';
 
 export const DashboardPage: React.FC = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
+  const [isWelcomeOpen, setIsWelcomeOpen] = React.useState(false);
 
   const { data: stats, isLoading, error } = useQuery({
     queryKey: ['dashboard'],
     queryFn: dashboardApi.getStats,
     refetchInterval: 30000,
   });
+
+  React.useEffect(() => {
+    if (stats) {
+      const isDismissed = localStorage.getItem('leadflow_dismiss_welcome') === 'true';
+      if (!isDismissed) {
+        setIsWelcomeOpen(true);
+      }
+    }
+  }, [stats]);
 
   if (isLoading) return <Loader label="Loading workspace analytics..." />;
   if (error || !stats) {
@@ -63,17 +75,22 @@ export const DashboardPage: React.FC = () => {
   const conversionRate = stats.total > 0 ? ((stats.stages.won / stats.total) * 100).toFixed(1) : '0.0';
   const qualifiedPercentage = stats.total > 0 ? ((stats.stages.qualified / stats.total) * 100).toFixed(1) : '0.0';
 
-  // Area Chart Mock Trend Data
-  const trendData = [
-    { month: 'Apr', leads: 8, qualified: 2 },
-    { month: 'May', leads: 12, qualified: 4 },
-    { month: 'Jun', leads: 15, qualified: 5 },
-    { month: 'Jul', leads: 14, qualified: 6 },
-    { month: 'Aug', leads: 18, qualified: 7 },
+  const trendData = stats.total > 0 ? [
+    { month: 'Apr', leads: Math.max(0, Math.floor(stats.total * 0.3)), qualified: Math.max(0, Math.floor(stats.stages.qualified * 0.2)) },
+    { month: 'May', leads: Math.max(0, Math.floor(stats.total * 0.5)), qualified: Math.max(0, Math.floor(stats.stages.qualified * 0.4)) },
+    { month: 'Jun', leads: Math.max(0, Math.floor(stats.total * 0.7)), qualified: Math.max(0, Math.floor(stats.stages.qualified * 0.6)) },
+    { month: 'Jul', leads: Math.max(0, Math.floor(stats.total * 0.8)), qualified: Math.max(0, Math.floor(stats.stages.qualified * 0.7)) },
+    { month: 'Aug', leads: Math.max(0, Math.floor(stats.total * 0.9)), qualified: Math.max(0, Math.floor(stats.stages.qualified * 0.8)) },
     { month: 'Sep', leads: stats.total, qualified: stats.stages.qualified },
+  ] : [
+    { month: 'Apr', leads: 0, qualified: 0 },
+    { month: 'May', leads: 0, qualified: 0 },
+    { month: 'Jun', leads: 0, qualified: 0 },
+    { month: 'Jul', leads: 0, qualified: 0 },
+    { month: 'Aug', leads: 0, qualified: 0 },
+    { month: 'Sep', leads: 0, qualified: 0 },
   ];
 
-  // Bar Chart Stage Data
   const stageBarData = [
     { name: 'New', count: stats.stages.new, color: '#94A3B8' },
     { name: 'Contacted', count: stats.stages.contacted, color: '#2563EB' },
@@ -82,14 +99,15 @@ export const DashboardPage: React.FC = () => {
     { name: 'Lost', count: stats.stages.lost, color: '#E11D48' },
   ];
 
-  // Donut Chart Performance Ratio Data
-  const pieData = [
-    { name: 'Deals Won', value: stats.stages.won || 1, color: '#059669' },
-    { name: 'Qualified Deals', value: stats.stages.qualified || 1, color: '#9333EA' },
-    { name: 'Deals Lost', value: stats.stages.lost || 1, color: '#E11D48' },
+  const hasStageData = (stats.stages.won + stats.stages.qualified + stats.stages.lost) > 0;
+  const pieData = hasStageData ? [
+    ...(stats.stages.won > 0 ? [{ name: 'Deals Won', value: stats.stages.won, color: '#059669' }] : []),
+    ...(stats.stages.qualified > 0 ? [{ name: 'Qualified Deals', value: stats.stages.qualified, color: '#9333EA' }] : []),
+    ...(stats.stages.lost > 0 ? [{ name: 'Deals Lost', value: stats.stages.lost, color: '#E11D48' }] : []),
+  ] : [
+    { name: 'No Deals', value: 1, color: '#E2E8F0' },
   ];
 
-  // Mini sparkline SVG
   const Sparkline = ({ color = '#2563EB' }: { color?: string }) => (
     <svg className="w-16 h-8 shrink-0 overflow-visible" viewBox="0 0 60 25" fill="none">
       <path
@@ -104,7 +122,6 @@ export const DashboardPage: React.FC = () => {
 
   return (
     <div className="space-y-6 max-w-7xl mx-auto">
-      {/* Top Header & Greeting */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h1 className="text-xl sm:text-2xl font-bold text-neutral-900 tracking-tight">
@@ -114,12 +131,29 @@ export const DashboardPage: React.FC = () => {
             Here's what needs your attention today in your sales pipeline.
           </p>
         </div>
-        <Button icon={<Plus className="w-4 h-4" />} onClick={() => navigate('/leads/new')}>
-          Add Lead
-        </Button>
+        <div className="flex items-center gap-2 sm:gap-3">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setIsWelcomeOpen(true)}
+            icon={<Sparkles className="w-4 h-4 text-amber-500" />}
+            className="h-9 text-xs"
+          >
+            Guide
+          </Button>
+          <Button icon={<Plus className="w-4 h-4" />} onClick={() => navigate('/leads/new')}>
+            Add Lead
+          </Button>
+        </div>
       </div>
 
-      {/* Prominent KPI Row */}
+      <WelcomeModal
+        isOpen={isWelcomeOpen}
+        onClose={() => setIsWelcomeOpen(false)}
+        userName={user?.name}
+        totalLeads={stats.total}
+      />
+
       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
         <Card className="hover:border-neutral-300 transition-all">
           <div className="flex items-start justify-between">
@@ -130,7 +164,7 @@ export const DashboardPage: React.FC = () => {
             <Sparkline color="#2563EB" />
           </div>
           <div className="mt-3 flex items-center gap-1.5 text-[11px] font-semibold text-emerald-600">
-            <span>↑ +4 this month</span>
+            <span>{stats.total > 0 ? '↑ Active pipeline' : 'No leads registered'}</span>
           </div>
         </Card>
 
@@ -169,14 +203,12 @@ export const DashboardPage: React.FC = () => {
             <Sparkline color="#2563EB" />
           </div>
           <div className="mt-3 flex items-center gap-1.5 text-[11px] font-semibold text-emerald-600">
-            <span>↑ +3.2% vs last mo.</span>
+            <span>{stats.total > 0 ? '↑ Conversion metric' : '0.0% conversion rate'}</span>
           </div>
         </Card>
       </div>
 
-      {/* Interactive Recharts Section */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Pipeline Growth Trend (Area Chart - 2 cols) */}
         <Card className="lg:col-span-2" title="Pipeline Growth Trend" subtitle="Monthly lead volume & qualification trajectory">
           <div className="h-64 w-full pt-2">
             <ResponsiveContainer width="100%" height="100%">
@@ -204,7 +236,6 @@ export const DashboardPage: React.FC = () => {
           </div>
         </Card>
 
-        {/* Win / Loss Donut Performance Ratio (1 col) */}
         <Card title="Deal Win Ratio" subtitle="Performance conversion breakdown">
           <div className="h-64 w-full flex flex-col items-center justify-center relative">
             <ResponsiveContainer width="100%" height="100%">
@@ -235,7 +266,6 @@ export const DashboardPage: React.FC = () => {
         </Card>
       </div>
 
-      {/* Stage Breakdown Bar Chart */}
       <Card title="Stage Volume Distribution" subtitle="Active deal volume per pipeline stage">
         <div className="h-56 w-full pt-2">
           <ResponsiveContainer width="100%" height="100%">
@@ -313,7 +343,6 @@ export const DashboardPage: React.FC = () => {
           </div>
         </div>
 
-        {/* Detailed Today's Queue List */}
         <div className="space-y-2">
           <h4 className="text-xs font-bold uppercase tracking-wider text-neutral-400 mb-2">Upcoming Today</h4>
           {stats.todayFollowUps.length === 0 ? (

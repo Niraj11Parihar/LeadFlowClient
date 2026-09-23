@@ -10,3 +10,5 @@ export * from './DateTimePicker';
 export * from './DropdownMenu';
 export * from './PageHeader';
 export * from './Pagination';
+export * from './WelcomeModal';
+
