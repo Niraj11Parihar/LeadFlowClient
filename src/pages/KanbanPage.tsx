@@ -10,7 +10,7 @@ import { Input } from '../components/common/Input';
 import { Loader } from '../components/common/Loader';
 import { ConfirmModal } from '../components/common/ConfirmModal';
 import { KanbanBoard } from '../features/leads/components/KanbanBoard';
-import type { LeadStage } from '../types';
+import type { Lead, LeadStage } from '../types';
 
 export const KanbanPage: React.FC = () => {
   const navigate = useNavigate();
@@ -25,8 +25,10 @@ export const KanbanPage: React.FC = () => {
     setSearchQuery(searchInput);
   };
 
+  const leadsQueryKey = ['leads', { limit: 100, search: searchQuery.trim() || undefined }];
+
   const { data, isLoading, isError } = useQuery({
-    queryKey: ['leads', { limit: 100, search: searchQuery.trim() || undefined }],
+    queryKey: leadsQueryKey,
     queryFn: () => leadApi.getLeads({ limit: 100, search: searchQuery.trim() || undefined }),
   });
 
@@ -38,7 +40,54 @@ export const KanbanPage: React.FC = () => {
   const updateStageMutation = useMutation({
     mutationFn: ({ id, newStage }: { id: string; newStage: LeadStage }) =>
       leadApi.updateLead(id, { stage: newStage }),
-    onSuccess: () => {
+    onMutate: async ({ id, newStage }) => {
+      await queryClient.cancelQueries({ queryKey: ['leads'] });
+
+      const previousLeadsData = queryClient.getQueryData<any>(leadsQueryKey);
+      const previousStats = queryClient.getQueryData<any>(['dashboard']);
+
+      if (previousLeadsData) {
+        queryClient.setQueryData<any>(leadsQueryKey, (old: any) => {
+          if (!old || !old.data) return old;
+          return {
+            ...old,
+            data: old.data.map((lead: Lead) =>
+              lead.id === id ? { ...lead, stage: newStage } : lead
+            ),
+          };
+        });
+      }
+
+      if (previousStats && previousLeadsData?.data) {
+        const targetLead = previousLeadsData.data.find((l: Lead) => l.id === id);
+        if (targetLead && targetLead.stage !== newStage) {
+          const oldStageKey = targetLead.stage.toLowerCase() as keyof typeof previousStats.stages;
+          const newStageKey = newStage.toLowerCase() as keyof typeof previousStats.stages;
+          queryClient.setQueryData<any>(['dashboard'], (old: any) => {
+            if (!old) return old;
+            return {
+              ...old,
+              stages: {
+                ...old.stages,
+                [oldStageKey]: Math.max(0, (old.stages[oldStageKey] || 1) - 1),
+                [newStageKey]: (old.stages[newStageKey] || 0) + 1,
+              },
+            };
+          });
+        }
+      }
+
+      return { previousLeadsData, previousStats };
+    },
+    onError: (_err, _variables, context) => {
+      if (context?.previousLeadsData) {
+        queryClient.setQueryData(leadsQueryKey, context.previousLeadsData);
+      }
+      if (context?.previousStats) {
+        queryClient.setQueryData(['dashboard'], context.previousStats);
+      }
+    },
+    onSettled: () => {
       queryClient.invalidateQueries({ queryKey: ['leads'] });
       queryClient.invalidateQueries({ queryKey: ['dashboard'] });
     },
@@ -55,7 +104,6 @@ export const KanbanPage: React.FC = () => {
 
   return (
     <div className="space-y-6 max-w-7xl mx-auto">
-      {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h1 className="text-xl sm:text-2xl font-bold text-neutral-900 tracking-tight">Kanban</h1>
@@ -71,7 +119,6 @@ export const KanbanPage: React.FC = () => {
         </div>
       </div>
 
-      {/* Stats Summary Bar */}
       <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
         <div className="bg-white border border-neutral-200/80 rounded-xl p-3 shadow-2xs">
           <div className="text-[11px] font-semibold text-neutral-500 uppercase tracking-wider">New</div>
@@ -95,7 +142,6 @@ export const KanbanPage: React.FC = () => {
         </div>
       </div>
 
-      {/* Toolbar Search */}
       <form onSubmit={handleSearchSubmit} className="flex items-center gap-2 max-w-md">
         <div className="flex-1">
           <Input
@@ -110,7 +156,6 @@ export const KanbanPage: React.FC = () => {
         </Button>
       </form>
 
-      {/* Board Content */}
       {isLoading ? (
         <Card className="p-12 flex justify-center items-center">
           <Loader label="Loading visual board..." />
