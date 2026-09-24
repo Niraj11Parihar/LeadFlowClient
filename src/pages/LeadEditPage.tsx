@@ -5,8 +5,8 @@ import { leadApi } from '../features/leads/api/leadApi';
 import { LeadForm } from '../features/leads/components/LeadForm';
 import type { LeadFormData } from '../features/leads/components/LeadForm';
 import { Card } from '../components/common/Card';
+import { Button } from '../components/common/Button';
 import { Loader } from '../components/common/Loader';
-import { PageHeader } from '../components/common/PageHeader';
 import { ConfirmModal } from '../components/common/ConfirmModal';
 import { ArrowLeftIcon as ArrowLeft, AlertCircleIcon as AlertCircle, EditIcon as Edit2 } from '../assets/SVGicons';
 
@@ -29,7 +29,7 @@ export const LeadEditPage: React.FC = () => {
       queryClient.invalidateQueries({ queryKey: ['leads'] });
       queryClient.invalidateQueries({ queryKey: ['lead', id] });
       queryClient.invalidateQueries({ queryKey: ['dashboard'] });
-      navigate(`/leads/${id}`);
+      navigate(`/leads/${id}`, { replace: true });
     },
     onError: (err: any) => {
       setError(err.response?.data?.message || 'Failed to update lead');
@@ -59,19 +59,24 @@ export const LeadEditPage: React.FC = () => {
   }
 
   return (
-    <div className="w-full space-y-6">
-      <PageHeader
-        title={`Edit lead — ${lead.name}`}
-        subtitle="Update contact info, stage, or follow-up schedule"
-        backButton={
-          <button
-            onClick={() => navigate(`/leads/${id}`)}
-            className="p-2 rounded-lg text-slate-500 hover:text-slate-800 hover:bg-white transition-colors border border-slate-200 cursor-pointer shrink-0"
-          >
-            <ArrowLeft className="w-4 h-4" />
-          </button>
-        }
-      />
+    <div className="w-full space-y-6 max-w-7xl mx-auto">
+      {/* Top Back Navigation & Title Block */}
+      <div className="space-y-3 pb-1">
+        <Button
+          variant="outline"
+          size="sm"
+          icon={<ArrowLeft className="w-4 h-4" />}
+          onClick={() => navigate(`/leads/${id}`, { replace: true })}
+        >
+          Back
+        </Button>
+        <div>
+          <h1 className="text-2xl font-bold text-slate-900 tracking-tight">{lead.name}</h1>
+          <p className="text-[13px] text-slate-500 mt-0.5">
+            Update contact info, stage, or follow-up schedule
+          </p>
+        </div>
+      </div>
 
       {error && (
         <div className="p-4 bg-rose-50 border border-rose-200 rounded-xl flex items-center gap-3 text-sm text-rose-700 font-medium">
@@ -85,7 +90,7 @@ export const LeadEditPage: React.FC = () => {
           initialData={lead}
           onSubmit={handleSubmit}
           isLoading={false}
-          onCancel={() => navigate(`/leads/${id}`)}
+          onCancel={() => navigate(`/leads/${id}`, { replace: true })}
         />
       </Card>
 

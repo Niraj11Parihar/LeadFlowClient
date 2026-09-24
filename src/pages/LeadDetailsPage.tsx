@@ -7,7 +7,6 @@ import { Badge } from '../components/common/Badge';
 import { Button } from '../components/common/Button';
 import { ConfirmModal } from '../components/common/ConfirmModal';
 import { Loader } from '../components/common/Loader';
-import { DropdownMenu } from '../components/common/DropdownMenu';
 import { ActivityTimeline } from '../features/leads/components/ActivityTimeline';
 import { CompleteFollowUpModal } from '../features/leads/components/CompleteFollowUpModal';
 import { useAuth } from '../context/AuthContext';
@@ -79,7 +78,7 @@ export const LeadDetailsPage: React.FC = () => {
   if (error || !lead) {
     return (
       <div className="max-w-3xl mx-auto space-y-4">
-        <Button variant="outline" icon={<ArrowLeft className="w-4 h-4" />} onClick={() => navigate(-1)}>
+        <Button variant="outline" size="sm" icon={<ArrowLeft className="w-4 h-4" />} onClick={() => navigate('/leads')}>
           Back
         </Button>
         <div className="p-6 bg-rose-50 border border-rose-200 text-rose-700 rounded-xl text-sm font-semibold">
@@ -108,15 +107,16 @@ export const LeadDetailsPage: React.FC = () => {
     <div className="w-full space-y-5 max-w-7xl mx-auto">
       {/* Top Breadcrumb Navigation & Action Bar */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-2">
-        <button
-          onClick={() => navigate(-1)}
-          className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-neutral-600 hover:text-neutral-900 bg-white border border-neutral-200 shadow-xs rounded-lg transition-colors cursor-pointer self-start sm:self-auto"
+        <Button
+          variant="outline"
+          size="sm"
+          icon={<ArrowLeft className="w-4 h-4" />}
+          onClick={() => navigate('/leads')}
         >
-          <ArrowLeft className="w-3.5 h-3.5" />
-          <span>Back</span>
-        </button>
+          Back
+        </Button>
 
-        {/* Primary Action Controls with Overflow Menu */}
+        {/* Primary Action Controls */}
         <div className="flex items-center gap-2">
           <Button
             variant="primary"
@@ -130,26 +130,19 @@ export const LeadDetailsPage: React.FC = () => {
           <Button
             variant="outline"
             size="sm"
-            icon={<Edit className="w-4 h-4" />}
+            icon={<Edit className="w-4 h-4 text-neutral-700" />}
             onClick={() => navigate(`/leads/${lead.id}/edit`)}
-          >
-            Edit
-          </Button>
+            title="Edit lead"
+            className="w-8 h-8 px-0"
+          />
 
-          {/* Discreet Overflow Menu for Delete */}
-          <DropdownMenu
-            items={[
-              {
-                label: 'Duplicate Lead Profile',
-                onClick: () => navigate('/leads/new'),
-              },
-              {
-                label: 'Delete Lead',
-                icon: <Trash2 className="w-4 h-4" />,
-                variant: 'danger',
-                onClick: () => setIsDeleteModalOpen(true),
-              },
-            ]}
+          <Button
+            variant="outline"
+            size="sm"
+            icon={<Trash2 className="w-4 h-4 text-rose-600" />}
+            onClick={() => setIsDeleteModalOpen(true)}
+            title="Delete lead"
+            className="w-8 h-8 px-0 hover:bg-rose-50 hover:border-rose-200"
           />
         </div>
       </div>
@@ -310,7 +303,7 @@ export const LeadDetailsPage: React.FC = () => {
         onConfirm={() => deleteMutation.mutate()}
         isLoading={deleteMutation.isPending}
         title={`Delete Lead "${lead.name}"?`}
-        description="Are you sure you want to delete this lead? This action cannot be undone and will permanently remove this lead profile."
+        description="Are you sure you want to delete this lead?"
         confirmText="Delete lead"
         cancelText="Cancel"
         variant="danger"

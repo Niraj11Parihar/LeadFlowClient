@@ -5,6 +5,7 @@ import { leadApi } from '../features/leads/api/leadApi';
 import { LeadForm } from '../features/leads/components/LeadForm';
 import type { LeadFormData } from '../features/leads/components/LeadForm';
 import { Card } from '../components/common/Card';
+import { Button } from '../components/common/Button';
 import { PageHeader } from '../components/common/PageHeader';
 import { ArrowLeftIcon as ArrowLeft, AlertCircleIcon as AlertCircle } from '../assets/SVGicons';
 
@@ -36,12 +37,14 @@ export const LeadCreatePage: React.FC = () => {
         title="Create new lead"
         subtitle="Fill in the contact information, pipeline details, and follow-up schedule"
         backButton={
-          <button
+          <Button
+            variant="outline"
+            size="sm"
+            icon={<ArrowLeft className="w-4 h-4" />}
             onClick={() => navigate('/leads')}
-            className="p-2 rounded-lg text-slate-500 hover:text-slate-800 hover:bg-white transition-colors border border-slate-200 cursor-pointer shrink-0"
           >
-            <ArrowLeft className="w-4 h-4" />
-          </button>
+            Back
+          </Button>
         }
       />
 

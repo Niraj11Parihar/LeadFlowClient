@@ -142,7 +142,7 @@ export const KanbanPage: React.FC = () => {
         onClose={() => setDeleteLeadId(null)}
         onConfirm={() => deleteLeadId && deleteMutation.mutate(deleteLeadId)}
         title="Delete Lead"
-        description="Are you sure you want to delete this lead from the pipeline?"
+        description="Are you sure you want to delete this lead?"
         confirmText="Delete"
         isLoading={deleteMutation.isPending}
       />
