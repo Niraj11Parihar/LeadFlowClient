@@ -11,7 +11,6 @@ import {
   AlertCircleIcon as AlertCircle,
   EyeIcon as Eye,
   EyeOffIcon as EyeOff,
-  SparklesIcon as Sparkles,
   CheckCircleIcon as CheckCircle,
   TrendingUpIcon as TrendingUp,
   LayersIcon as Layers,
@@ -63,11 +62,6 @@ export const LoginPage: React.FC = () => {
       setPassword('');
       setIsLoading(false);
     }
-  };
-
-  const fillDemoAccount = () => {
-    setEmail(import.meta.env.VITE_DEMO_EMAIL || 'niraj@example.com');
-    setPassword(import.meta.env.VITE_DEMO_PASSWORD || 'password123');
   };
 
   return (
@@ -191,16 +185,7 @@ export const LoginPage: React.FC = () => {
               </Button>
             </form>
 
-            <div className="mt-5 sm:mt-6 pt-5 sm:pt-6 border-t border-slate-100 space-y-4 text-center">
-              <button
-                onClick={fillDemoAccount}
-                type="button"
-                className="w-full h-10 px-3 bg-slate-100 hover:bg-slate-200/80 text-slate-700 text-xs font-semibold rounded-xl transition-all cursor-pointer flex items-center justify-center gap-1.5"
-              >
-                <Sparkles className="w-3.5 h-3.5 text-brand-600" />
-                <span>Auto-fill Demo Account (Niraj)</span>
-              </button>
-
+            <div className="mt-5 sm:mt-6 pt-5 sm:pt-6 border-t border-slate-100 text-center">
               <p className="text-xs text-slate-500">
                 Don't have an account yet?{' '}
                 <Link to="/auth/register" className="font-bold text-brand-600 hover:text-brand-700 hover:underline">
