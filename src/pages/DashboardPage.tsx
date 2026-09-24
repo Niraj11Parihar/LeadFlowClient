@@ -44,7 +44,7 @@ export const DashboardPage: React.FC = () => {
   React.useEffect(() => {
     if (stats) {
       const isDismissed = localStorage.getItem('leadflow_dismiss_welcome') === 'true';
-      if (!isDismissed) {
+      if (!isDismissed && stats.total === 0) {
         setIsWelcomeOpen(true);
       }
     }
@@ -131,15 +131,17 @@ export const DashboardPage: React.FC = () => {
           </p>
         </div>
         <div className="flex items-center gap-2 sm:gap-3">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => setIsWelcomeOpen(true)}
-            icon={<Sparkles className="w-4 h-4 text-amber-500" />}
-            className="h-9 text-xs"
-          >
-            Guide
-          </Button>
+          {stats.total === 0 && (
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setIsWelcomeOpen(true)}
+              icon={<Sparkles className="w-4 h-4 text-amber-500" />}
+              className="h-9 text-xs"
+            >
+              Guide
+            </Button>
+          )}
           <Button icon={<Plus className="w-4 h-4" />} onClick={() => navigate('/leads/new')}>
             Add Lead
           </Button>
