@@ -25,11 +25,6 @@ export const TasksPage: React.FC = () => {
     queryFn: () => leadApi.getLeads({ limit: 100 }),
   });
 
-  const handleSearchSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    setSearchQuery(searchInput);
-  };
-
   const leadsWithFollowups = (data?.data || []).filter((l) => l.nextFollowUpAt || l.followUpAt);
 
   const now = new Date();

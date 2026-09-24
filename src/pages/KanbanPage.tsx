@@ -3,7 +3,6 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import { PlusIcon as Plus, SearchIcon as Search } from '../assets/SVGicons';
 import { leadApi } from '../features/leads/api/leadApi';
-import { dashboardApi } from '../features/dashboard/api/dashboardApi';
 import { Card } from '../components/common/Card';
 import { Button } from '../components/common/Button';
 import { Input } from '../components/common/Input';
@@ -20,21 +19,11 @@ export const KanbanPage: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [deleteLeadId, setDeleteLeadId] = useState<string | null>(null);
 
-  const handleSearchSubmit = (e?: React.FormEvent) => {
-    if (e) e.preventDefault();
-    setSearchQuery(searchInput);
-  };
-
   const leadsQueryKey = ['leads', { limit: 100, search: searchQuery.trim() || undefined }];
 
   const { data, isLoading, isError } = useQuery({
     queryKey: leadsQueryKey,
     queryFn: () => leadApi.getLeads({ limit: 100, search: searchQuery.trim() || undefined }),
-  });
-
-  const { data: stats } = useQuery({
-    queryKey: ['dashboard'],
-    queryFn: dashboardApi.getStats,
   });
 
   const updateStageMutation = useMutation({

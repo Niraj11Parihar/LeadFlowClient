@@ -27,11 +27,6 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({ isOpen, onClose 
     enabled: isOpen && submittedQuery.trim().length > 0,
   });
 
-  const handleSearchSubmit = (e?: React.FormEvent) => {
-    if (e) e.preventDefault();
-    setSubmittedQuery(query.trim());
-  };
-
   const handleClear = () => {
     setQuery('');
     setSubmittedQuery('');

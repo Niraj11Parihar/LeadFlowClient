@@ -61,12 +61,6 @@ export const LeadsPage: React.FC = () => {
 
   const [deleteLeadId, setDeleteLeadId] = useState<string | null>(null);
 
-  const handleSearchSubmit = (e?: React.FormEvent) => {
-    if (e) e.preventDefault();
-    setSearchQuery(searchInput);
-    setPage(1);
-  };
-
   const filters: LeadFilters = {
     page,
     limit: 15,

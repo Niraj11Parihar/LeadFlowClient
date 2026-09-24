@@ -25,11 +25,6 @@ export const ActivitiesPage: React.FC = () => {
     queryFn: () => leadApi.getLeads({ limit: 100 }),
   });
 
-  const handleSearchSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    setSearchQuery(searchInput);
-  };
-
   const leads = data?.data || [];
 
   // Transform leads into simulated audit stream entries (e.g. Lead creation, Stage updates, Follow-ups)

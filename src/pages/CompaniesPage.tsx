@@ -9,7 +9,6 @@ import {
 import { leadApi } from '../features/leads/api/leadApi';
 import { Card } from '../components/common/Card';
 import { Input } from '../components/common/Input';
-import { Button } from '../components/common/Button';
 import { Loader } from '../components/common/Loader';
 import { Badge } from '../components/common/Badge';
 
@@ -22,11 +21,6 @@ export const CompaniesPage: React.FC = () => {
     queryKey: ['leads', { limit: 100 }],
     queryFn: () => leadApi.getLeads({ limit: 100 }),
   });
-
-  const handleSearchSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    setSearchQuery(searchInput);
-  };
 
   // Group leads by company name
   const companiesMap = (data?.data || []).reduce((acc, lead) => {
