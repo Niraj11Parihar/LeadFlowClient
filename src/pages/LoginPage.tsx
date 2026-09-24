@@ -18,6 +18,8 @@ import {
   ClockIcon as Clock,
 } from '../assets/SVGicons';
 
+import { hashPasswordClient } from '../utils/crypto';
+
 export const LoginPage: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -51,30 +53,32 @@ export const LoginPage: React.FC = () => {
     setIsLoading(true);
 
     try {
-      const data = await authApi.login(email, password);
+      const encryptedPassword = await hashPasswordClient(password);
+      const data = await authApi.login(email, encryptedPassword);
       login(data.token, data.user);
       navigate('/dashboard');
     } catch (err: any) {
       setError(err.response?.data?.message || 'Failed to sign in. Please check credentials.');
     } finally {
+      setPassword('');
       setIsLoading(false);
     }
   };
 
   const fillDemoAccount = () => {
-    setEmail('niraj@example.com');
-    setPassword('password123');
+    setEmail(import.meta.env.VITE_DEMO_EMAIL || 'niraj@example.com');
+    setPassword(import.meta.env.VITE_DEMO_PASSWORD || 'password123');
   };
 
   return (
-    <div className="min-h-screen w-full bg-slate-950 flex flex-col items-center justify-center p-3 sm:p-6 lg:p-8 relative overflow-x-hidden overflow-y-auto py-6 sm:py-12">
+    <div className="min-h-screen lg:h-screen w-full bg-slate-950 flex flex-col items-center justify-center p-3 sm:p-6 lg:p-6 relative overflow-x-hidden overflow-y-auto lg:overflow-hidden py-6 sm:py-8 lg:py-0">
       <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
         <div className="absolute top-1/4 left-1/4 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-brand-600/20 rounded-full blur-3xl animate-pulse" />
         <div className="absolute bottom-1/4 right-1/4 translate-x-1/2 translate-y-1/2 w-96 h-96 bg-purple-600/20 rounded-full blur-3xl" />
       </div>
 
       <div className="w-full max-w-5xl bg-slate-900/80 border border-slate-800 rounded-2xl sm:rounded-3xl shadow-2xl overflow-hidden grid grid-cols-1 lg:grid-cols-12 relative z-10 backdrop-blur-xl my-auto">
-        <div className="lg:col-span-6 p-5 sm:p-8 lg:p-12 bg-gradient-to-br from-slate-900 via-brand-950/40 to-purple-950/40 border-b lg:border-b-0 lg:border-r border-slate-800/80 flex flex-col justify-between relative">
+        <div className="lg:col-span-6 p-5 sm:p-8 lg:p-8 xl:p-10 bg-gradient-to-br from-slate-900 via-brand-950/40 to-purple-950/40 border-b lg:border-b-0 lg:border-r border-slate-800/80 flex flex-col justify-between relative">
           <div>
             <div className="inline-flex items-center gap-2.5 px-3 py-1 sm:px-3.5 sm:py-1.5 rounded-full bg-brand-500/10 border border-brand-500/30 text-brand-400 text-[11px] sm:text-xs font-semibold mb-3 sm:mb-8">
               <Zap className="w-3.5 h-3.5 sm:w-4 sm:h-4 fill-current text-brand-400" />
@@ -126,7 +130,7 @@ export const LoginPage: React.FC = () => {
           </div>
         </div>
 
-        <div className="lg:col-span-6 p-5 sm:p-10 lg:p-12 bg-white flex flex-col justify-center">
+        <div className="lg:col-span-6 p-5 sm:p-8 lg:p-8 xl:p-10 bg-white flex flex-col justify-center">
           <div className="max-w-md mx-auto w-full">
             <div className="mb-6 sm:mb-8">
               <h2 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">Sign in to LeadFlow</h2>
@@ -150,7 +154,7 @@ export const LoginPage: React.FC = () => {
               </div>
             )}
 
-            <form onSubmit={handleSubmit} className="space-y-4">
+            <form onSubmit={handleSubmit} noValidate className="space-y-4">
               <Input
                 label="Email address"
                 type="email"
@@ -168,6 +172,7 @@ export const LoginPage: React.FC = () => {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 icon={<Lock className="w-4 h-4" />}
+                autoComplete="current-password"
                 rightElement={
                   <button
                     type="button"

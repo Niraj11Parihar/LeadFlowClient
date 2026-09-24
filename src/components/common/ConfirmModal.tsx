@@ -1,13 +1,7 @@
 import React, { useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { Button } from './Button';
-import {
-  AlertTriangleIcon as AlertTriangle,
-  XIcon as X,
-  TrashIcon as Trash2,
-  CheckCircleIcon as CheckCircle2,
-  AlertCircleIcon as AlertCircle,
-} from '../../assets/SVGicons';
+import { XIcon as X } from '../../assets/SVGicons';
 
 export type ConfirmVariant = 'danger' | 'warning' | 'primary' | 'info';
 
@@ -33,7 +27,6 @@ export const ConfirmModal: React.FC<ConfirmModalProps> = ({
   confirmText = 'Confirm',
   cancelText = 'Cancel',
   variant = 'warning',
-  icon,
   isLoading = false,
 }) => {
   useEffect(() => {
@@ -56,62 +49,45 @@ export const ConfirmModal: React.FC<ConfirmModalProps> = ({
 
   const variantStyles = {
     danger: {
-      badgeBg: 'bg-rose-50 text-rose-600 border-rose-200/80',
       confirmVariant: 'danger' as const,
-      defaultIcon: <Trash2 className="w-5 h-5" />,
     },
     warning: {
-      badgeBg: 'bg-amber-50 text-amber-600 border-amber-200/80',
       confirmVariant: 'secondary' as const,
-      defaultIcon: <AlertTriangle className="w-5 h-5" />,
     },
     primary: {
-      badgeBg: 'bg-brand-50 text-brand-600 border-brand-200/80',
       confirmVariant: 'primary' as const,
-      defaultIcon: <CheckCircle2 className="w-5 h-5" />,
     },
     info: {
-      badgeBg: 'bg-slate-100 text-slate-700 border-slate-200/80',
       confirmVariant: 'secondary' as const,
-      defaultIcon: <AlertCircle className="w-5 h-5" />,
     },
   };
 
   const style = variantStyles[variant] || variantStyles.warning;
-  const displayIcon = icon || style.defaultIcon;
 
   const modalContent = (
     <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-xs animate-fade-in">
-      <div className="relative w-full max-w-md bg-white rounded-xl shadow-dropdown border border-slate-200 overflow-hidden transform transition-all">
+      <div className="relative w-full max-w-[340px] bg-white rounded-2xl shadow-dropdown border border-slate-200 overflow-hidden transform transition-all p-5 sm:p-6 text-center">
         <button
           onClick={onClose}
           disabled={isLoading}
-          className="absolute top-4 right-4 p-1 rounded-md text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-colors disabled:opacity-50 cursor-pointer"
+          className="absolute top-3 right-3 p-1 rounded-md text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-colors disabled:opacity-50 cursor-pointer"
         >
           <X className="w-4 h-4" />
         </button>
 
-        <div className="p-6">
-          <div className="flex items-start gap-4">
-            <div
-              className={`w-10 h-10 rounded-lg flex items-center justify-center border shrink-0 ${style.badgeBg}`}
-            >
-              {displayIcon}
-            </div>
-            <div className="flex-1 pr-4">
-              <h3 className="text-[16px] font-bold text-slate-900 tracking-tight">{title}</h3>
-              {description && (
-                <p className="text-[13px] text-slate-500 mt-1 leading-relaxed">{description}</p>
-              )}
-            </div>
-          </div>
+        <div className="pt-1">
+          <h2 className="text-lg font-bold text-slate-900 tracking-tight text-center">{title}</h2>
+          {description && (
+            <p className="text-md text-slate-500 mt-1.5 leading-relaxed text-center">{description}</p>
+          )}
 
-          <div className="flex items-center justify-end gap-2.5 mt-6 pt-4 border-t border-slate-100">
+          <div className="flex items-center justify-center gap-2.5 mt-5 pt-4 border-t border-slate-100">
             <Button
               variant="outline"
               size="sm"
               onClick={onClose}
               disabled={isLoading}
+              className="px-4 min-w-[80px]"
             >
               {cancelText}
             </Button>
@@ -122,6 +98,7 @@ export const ConfirmModal: React.FC<ConfirmModalProps> = ({
               onClick={async () => {
                 await onConfirm();
               }}
+              className="px-4 min-w-[80px]"
             >
               {confirmText}
             </Button>

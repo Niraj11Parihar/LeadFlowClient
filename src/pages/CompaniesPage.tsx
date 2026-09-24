@@ -62,18 +62,19 @@ export const CompaniesPage: React.FC = () => {
           </p>
         </div>
 
-        <form onSubmit={handleSearchSubmit} className="flex items-center gap-2 w-full sm:w-auto">
+        <div className="w-full sm:w-[280px]">
           <Input
             placeholder="Search companies..."
             value={searchInput}
-            onChange={(e) => setSearchInput(e.target.value)}
+            onChange={(e) => {
+              const val = e.target.value;
+              setSearchInput(val);
+              setSearchQuery(val);
+            }}
             icon={<Search className="w-4 h-4" />}
-            className="w-full sm:w-[260px]"
+            className="w-full h-10 text-xs"
           />
-          <Button type="submit" variant="secondary" size="sm" className="h-9 px-3 shrink-0">
-            Filter
-          </Button>
-        </form>
+        </div>
       </div>
 
       {isLoading ? (

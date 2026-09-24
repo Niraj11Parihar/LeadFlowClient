@@ -94,24 +94,22 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({ isOpen, onClose 
         className="w-full max-w-xl bg-white rounded-2xl shadow-popover border border-neutral-200 overflow-hidden flex flex-col"
         onClick={(e) => e.stopPropagation()}
       >
-        <form onSubmit={handleSearchSubmit} className="flex items-center px-4 border-b border-neutral-200/80 bg-surface-subtle">
-          <button type="submit" className="p-1 text-neutral-400 hover:text-brand-600 cursor-pointer mr-2 shrink-0" title="Click to search">
+        <div className="flex items-center px-4 border-b border-neutral-200/80 bg-surface-subtle">
+          <div className="p-1 text-neutral-400 mr-2 shrink-0">
             <Search className="w-4 h-4" />
-          </button>
+          </div>
           <input
             type="text"
             value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            placeholder="Type name & press Enter to search..."
+            onChange={(e) => {
+              const val = e.target.value;
+              setQuery(val);
+              setSubmittedQuery(val);
+            }}
+            placeholder="Type to search leads..."
             className="w-full py-3.5 text-sm font-medium text-neutral-900 placeholder:text-neutral-400 bg-transparent border-none outline-none focus:outline-none focus:ring-0 focus:border-none ring-0"
             autoFocus
           />
-          <button
-            type="submit"
-            className="px-2.5 py-1 text-xs font-semibold bg-brand-600 hover:bg-brand-700 text-white rounded-md cursor-pointer shrink-0 mr-2"
-          >
-            Search
-          </button>
           {query ? (
             <button
               type="button"
@@ -125,7 +123,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({ isOpen, onClose 
               ESC
             </kbd>
           )}
-        </form>
+        </div>
 
         <div className="max-h-96 overflow-y-auto custom-scrollbar p-2 space-y-4">
           {/* Quick Actions */}
@@ -197,7 +195,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({ isOpen, onClose 
         </div>
 
         <div className="px-4 py-2 bg-surface-subtle border-t border-neutral-200/80 text-[11px] text-neutral-400 flex items-center justify-between">
-          <span>Press Enter or click Search to search</span>
+          <span>Type to search leads across LeadFlow</span>
           <span className="flex items-center gap-1 font-semibold text-neutral-500">
             LeadFlow QuickSearch
           </span>

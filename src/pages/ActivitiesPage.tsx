@@ -6,7 +6,6 @@ import {
   PlusIcon as Plus,
   EditIcon as Edit,
   CalendarIcon as Calendar,
-  BuildingIcon as Building,
   SearchIcon as Search,
 } from '../assets/SVGicons';
 import { leadApi } from '../features/leads/api/leadApi';
@@ -121,20 +120,19 @@ export const ActivitiesPage: React.FC = () => {
           </p>
         </div>
 
-        <form onSubmit={handleSearchSubmit} className="flex items-center gap-2 w-full sm:w-auto">
-          <div className="flex-1 sm:w-[240px]">
-            <Input
-              placeholder="Search activity stream..."
-              value={searchInput}
-              onChange={(e) => setSearchInput(e.target.value)}
-              icon={<Search className="w-4 h-4" />}
-              className="w-full"
-            />
-          </div>
-          <Button type="submit" variant="secondary" size="sm" className="h-9 px-3 shrink-0">
-            Filter
-          </Button>
-        </form>
+        <div className="w-full sm:w-[280px]">
+          <Input
+            placeholder="Search activity stream..."
+            value={searchInput}
+            onChange={(e) => {
+              const val = e.target.value;
+              setSearchInput(val);
+              setSearchQuery(val);
+            }}
+            icon={<Search className="w-4 h-4" />}
+            className="w-full h-10 text-xs"
+          />
+        </div>
       </div>
 
       {isLoading ? (
@@ -170,7 +168,6 @@ export const ActivitiesPage: React.FC = () => {
                       <>
                         <span>·</span>
                         <span className="flex items-center gap-1">
-                          <Building className="w-3 h-3" />
                           <span>{act.company}</span>
                         </span>
                       </>

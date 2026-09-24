@@ -6,7 +6,6 @@ import {
   SearchIcon as Search,
   CheckCircleIcon as CheckCircle,
   ClockIcon as Clock,
-  BuildingIcon as Building,
 } from '../assets/SVGicons';
 import { leadApi } from '../features/leads/api/leadApi';
 import { Card } from '../components/common/Card';
@@ -82,20 +81,19 @@ export const TasksPage: React.FC = () => {
           </p>
         </div>
 
-        <form onSubmit={handleSearchSubmit} className="flex items-center gap-2 w-full sm:w-auto">
-          <div className="flex-1 sm:w-[240px]">
-            <Input
-              placeholder="Search tasks..."
-              value={searchInput}
-              onChange={(e) => setSearchInput(e.target.value)}
-              icon={<Search className="w-4 h-4" />}
-              className="w-full"
-            />
-          </div>
-          <Button type="submit" variant="secondary" size="sm" className="h-9 px-3 shrink-0">
-            Search
-          </Button>
-        </form>
+        <div className="w-full sm:w-[280px]">
+          <Input
+            placeholder="Search tasks..."
+            value={searchInput}
+            onChange={(e) => {
+              const val = e.target.value;
+              setSearchInput(val);
+              setSearchQuery(val);
+            }}
+            icon={<Search className="w-4 h-4" />}
+            className="w-full h-10 text-xs"
+          />
+        </div>
       </div>
 
       <div className="flex items-center gap-2 border-b border-neutral-200/80 pb-3 overflow-x-auto custom-scrollbar whitespace-nowrap">
@@ -111,8 +109,8 @@ export const TasksPage: React.FC = () => {
               key={tab.id}
               onClick={() => setActiveTab(tab.id as any)}
               className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer shrink-0 ${isActive
-                  ? 'bg-brand-50 text-brand-700 border border-brand-200/80 shadow-xs'
-                  : 'text-neutral-500 hover:text-neutral-900 hover:bg-neutral-100'
+                ? 'bg-brand-50 text-brand-700 border border-brand-200/80 shadow-xs'
+                : 'text-neutral-500 hover:text-neutral-900 hover:bg-neutral-100'
                 }`}
             >
               {tab.label}
@@ -150,10 +148,10 @@ export const TasksPage: React.FC = () => {
                 <div className="flex items-start sm:items-center gap-3 min-w-0">
                   <div
                     className={`w-9 h-9 rounded-xl flex items-center justify-center shrink-0 ${isOverdue
-                        ? 'bg-rose-50 text-rose-600 border border-rose-200'
-                        : isToday
-                          ? 'bg-amber-50 text-amber-600 border border-amber-200'
-                          : 'bg-brand-50 text-brand-600 border border-brand-200'
+                      ? 'bg-rose-50 text-rose-600 border border-rose-200'
+                      : isToday
+                        ? 'bg-amber-50 text-amber-600 border border-amber-200'
+                        : 'bg-brand-50 text-brand-600 border border-brand-200'
                       }`}
                   >
                     <Clock className="w-4 h-4" />
@@ -170,7 +168,6 @@ export const TasksPage: React.FC = () => {
                     <div className="text-xs text-neutral-500 flex flex-wrap items-center gap-x-3 gap-y-1 mt-1">
                       {lead.company && (
                         <span className="flex items-center gap-1 shrink-0">
-                          <Building className="w-3 h-3 text-neutral-400" />
                           <span>{lead.company}</span>
                         </span>
                       )}

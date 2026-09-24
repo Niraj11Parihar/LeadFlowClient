@@ -118,43 +118,19 @@ export const KanbanPage: React.FC = () => {
           </Button>
         </div>
       </div>
-
-      <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
-        <div className="bg-white border border-neutral-200/80 rounded-xl p-3 shadow-2xs">
-          <div className="text-[11px] font-semibold text-neutral-500 uppercase tracking-wider">New</div>
-          <div className="text-lg font-bold text-neutral-900 mt-1">{stats?.stages.new || 0}</div>
-        </div>
-        <div className="bg-white border border-neutral-200/80 rounded-xl p-3 shadow-2xs">
-          <div className="text-[11px] font-semibold text-brand-600 uppercase tracking-wider">Contacted</div>
-          <div className="text-lg font-bold text-brand-700 mt-1">{stats?.stages.contacted || 0}</div>
-        </div>
-        <div className="bg-white border border-neutral-200/80 rounded-xl p-3 shadow-2xs">
-          <div className="text-[11px] font-semibold text-purple-600 uppercase tracking-wider">Qualified</div>
-          <div className="text-lg font-bold text-purple-700 mt-1">{stats?.stages.qualified || 0}</div>
-        </div>
-        <div className="bg-white border border-neutral-200/80 rounded-xl p-3 shadow-2xs">
-          <div className="text-[11px] font-semibold text-emerald-600 uppercase tracking-wider">Won Deals</div>
-          <div className="text-lg font-bold text-emerald-700 mt-1">{stats?.stages.won || 0}</div>
-        </div>
-        <div className="bg-white border border-neutral-200/80 rounded-xl p-3 shadow-2xs">
-          <div className="text-[11px] font-semibold text-rose-600 uppercase tracking-wider">Lost Deals</div>
-          <div className="text-lg font-bold text-rose-700 mt-1">{stats?.stages.lost || 0}</div>
-        </div>
+      <div className="w-full sm:w-[320px]">
+        <Input
+          placeholder="Filter Kanban cards..."
+          value={searchInput}
+          onChange={(e) => {
+            const val = e.target.value;
+            setSearchInput(val);
+            setSearchQuery(val);
+          }}
+          icon={<Search className="w-4 h-4" />}
+          className="h-10 text-xs"
+        />
       </div>
-
-      <form onSubmit={handleSearchSubmit} className="flex items-center gap-2 max-w-md">
-        <div className="flex-1">
-          <Input
-            placeholder="Filter Kanban cards by lead or company..."
-            value={searchInput}
-            onChange={(e) => setSearchInput(e.target.value)}
-            icon={<Search className="w-4 h-4" />}
-          />
-        </div>
-        <Button type="submit" size="sm" variant="secondary" className="h-9 px-3">
-          Search
-        </Button>
-      </form>
 
       {isLoading ? (
         <Card className="p-12 flex justify-center items-center">

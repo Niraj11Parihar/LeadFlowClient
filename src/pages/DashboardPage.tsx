@@ -26,7 +26,6 @@ import {
   AlertTriangleIcon as AlertTriangle,
   PlusIcon as Plus,
   ClockIcon as Clock,
-  BuildingIcon as Building,
   SparklesIcon as Sparkles,
 } from '../assets/SVGicons';
 import { WelcomeModal } from '../components/common/WelcomeModal';
@@ -362,7 +361,6 @@ export const DashboardPage: React.FC = () => {
                     <div className="min-w-0">
                       <p className="text-xs font-semibold text-neutral-900 truncate">{lead.name}</p>
                       <p className="text-[11px] text-neutral-500 truncate flex items-center gap-1">
-                        <Building className="w-3 h-3 text-neutral-400" />
                         <span>{lead.company || 'Individual Lead'}</span>
                       </p>
                     </div>

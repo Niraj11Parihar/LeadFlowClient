@@ -10,7 +10,6 @@ import {
   EyeIcon as Eye,
   PhoneIcon as Phone,
   MailIcon as Mail,
-  BuildingIcon as Building,
   CalendarIcon as Calendar,
   ArrowUpDownIcon as ArrowUpDown,
 } from '../assets/SVGicons';
@@ -181,19 +180,20 @@ export const LeadsPage: React.FC = () => {
 
         {/* Toolbar Controls */}
         <div className="flex flex-col lg:flex-row lg:items-center gap-3 lg:justify-between">
-          <form onSubmit={handleSearchSubmit} className="w-full lg:w-[360px] shrink-0 flex items-center gap-1.5">
-            <div className="flex-1">
-              <Input
-                placeholder="Search leads (Press Enter to search)..."
-                value={searchInput}
-                onChange={(e) => setSearchInput(e.target.value)}
-                icon={<Search className="w-4 h-4" />}
-              />
-            </div>
-            <Button type="submit" size="sm" variant="secondary" className="h-9 px-3 shrink-0">
-              Search
-            </Button>
-          </form>
+          <div className="w-full lg:w-[320px] shrink-0">
+            <Input
+              placeholder="Search leads..."
+              value={searchInput}
+              onChange={(e) => {
+                const val = e.target.value;
+                setSearchInput(val);
+                setSearchQuery(val);
+                setPage(1);
+              }}
+              icon={<Search className="w-4 h-4" />}
+              className="h-10 text-xs"
+            />
+          </div>
 
           <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 w-full lg:w-auto lg:ml-auto">
             <div className="w-full sm:w-[160px] shrink-0">
@@ -204,7 +204,7 @@ export const LeadsPage: React.FC = () => {
                   setFollowUp(e.target.value);
                   setPage(1);
                 }}
-                className="w-full text-xs"
+                className="w-full h-10 text-xs"
               />
             </div>
 
@@ -213,7 +213,7 @@ export const LeadsPage: React.FC = () => {
                 options={SORT_OPTIONS}
                 value={sortBy}
                 onChange={(e) => handleSortChange(e.target.value)}
-                className="w-full text-xs"
+                className="w-full h-10 text-xs"
               />
             </div>
 
@@ -222,7 +222,7 @@ export const LeadsPage: React.FC = () => {
               size="sm"
               onClick={() => setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')}
               title={`Sort ${sortOrder === 'asc' ? 'Descending' : 'Ascending'}`}
-              className="h-9 w-9 min-w-9 p-0 flex items-center justify-center shrink-0"
+              className="h-10 w-10 min-w-10 p-0 flex items-center justify-center shrink-0"
             >
               <ArrowUpDown className="w-3.5 h-3.5" />
             </Button>
@@ -295,7 +295,6 @@ export const LeadsPage: React.FC = () => {
                         <td className="py-3 px-5">
                           {lead.company ? (
                             <div className="flex items-center gap-1.5 text-xs text-neutral-700 font-medium">
-                              <Building className="w-3.5 h-3.5 text-neutral-400 shrink-0" />
                               <span>{lead.company}</span>
                             </div>
                           ) : (
@@ -381,7 +380,7 @@ export const LeadsPage: React.FC = () => {
         onClose={() => setDeleteLeadId(null)}
         onConfirm={() => deleteLeadId && deleteMutation.mutate(deleteLeadId)}
         title="Delete Lead"
-        description="Are you sure you want to delete this lead? This action cannot be undone and will remove all associated follow-ups and history."
+        description="Are you sure you want to delete this lead?"
         confirmText="Delete"
         isLoading={deleteMutation.isPending}
       />

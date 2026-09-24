@@ -16,7 +16,6 @@ import {
   ArrowLeftIcon as ArrowLeft,
   EditIcon as Edit,
   TrashIcon as Trash2,
-  BuildingIcon as Building,
   ClockIcon as Clock,
   CheckCircleIcon as CheckCircle,
 } from '../assets/SVGicons';
@@ -172,7 +171,6 @@ export const LeadDetailsPage: React.FC = () => {
                     <Badge stage={lead.stage} />
                   </div>
                   <p className="text-xs font-semibold text-neutral-500 mt-0.5 flex items-center gap-1.5">
-                    <Building className="w-3.5 h-3.5 text-neutral-400 shrink-0" />
                     <span>{lead.company || 'Individual / Personal Lead'}</span>
                   </p>
                 </div>
@@ -193,8 +191,8 @@ export const LeadDetailsPage: React.FC = () => {
                       onClick={() => updateStageMutation.mutate(stg)}
                       disabled={updateStageMutation.isPending}
                       className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer ${isActive
-                          ? 'bg-white text-neutral-900 shadow-xs border border-neutral-200 font-bold'
-                          : 'text-neutral-500 hover:text-neutral-900 hover:bg-neutral-200/60'
+                        ? 'bg-white text-neutral-900 shadow-xs border border-neutral-200 font-bold'
+                        : 'text-neutral-500 hover:text-neutral-900 hover:bg-neutral-200/60'
                         }`}
                     >
                       {stg.charAt(0) + stg.slice(1).toLowerCase()}

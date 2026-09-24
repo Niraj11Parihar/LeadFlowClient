@@ -124,7 +124,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen = false, onClose }) => 
         onClose={() => setIsLogoutModalOpen(false)}
         onConfirm={logout}
         title="Log Out of LeadFlow?"
-        description="Are you sure you want to log out? You will need to sign back in to access your CRM leads."
+        description="Are you sure you want to log out?"
         confirmText="Log Out"
         cancelText="Cancel"
         variant="warning"

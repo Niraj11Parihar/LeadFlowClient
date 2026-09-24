@@ -3,8 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import type { Lead, LeadStage } from '../../../types';
 import { DropdownMenu } from '../../../components/common/DropdownMenu';
 import {
-  BuildingIcon as Building,
-  CalendarIcon as Calendar,
   EyeIcon as Eye,
   EditIcon as Edit,
   TrashIcon as Trash2,
@@ -115,7 +113,6 @@ export const KanbanBoard: React.FC<KanbanBoardProps> = ({ leads, onStageChange, 
                               {lead.name}
                             </h4>
                             <p className="text-[11px] font-medium text-neutral-500 truncate flex items-center gap-1">
-                              <Building className="w-3 h-3 text-neutral-400 shrink-0" />
                               <span>{lead.company || 'Individual'}</span>
                             </p>
                           </div>
@@ -148,7 +145,6 @@ export const KanbanBoard: React.FC<KanbanBoardProps> = ({ leads, onStageChange, 
                       <div className="flex items-center justify-between pt-2 border-t border-neutral-100 text-[11px]">
                         {formattedNextDate ? (
                           <div className="flex items-center gap-1 text-brand-700 font-semibold bg-brand-50 px-2 py-0.5 rounded-md border border-brand-200/60">
-                            <Calendar className="w-3 h-3 text-brand-600" />
                             <span>{formattedNextDate}</span>
                           </div>
                         ) : (

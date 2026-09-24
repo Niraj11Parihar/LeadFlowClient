@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import {
   MenuIcon as Menu,
   SearchIcon as Search,
   LogOutIcon as LogOut,
   ChevronDownIcon as ChevronDown,
+  SettingsIcon,
 } from '../../assets/SVGicons';
 import { useAuth } from '../../context/AuthContext';
 import { CommandPalette } from '../common/CommandPalette';
@@ -16,22 +17,27 @@ interface HeaderProps {
 
 export const Header: React.FC<HeaderProps> = ({ onMenuClick }) => {
   const location = useLocation();
+  const navigate = useNavigate();
   const { user, logout } = useAuth();
 
   const [isCommandPaletteOpen, setIsCommandPaletteOpen] = useState(false);
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
   const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
 
-  // Derive breadcrumb path
   const getBreadcrumb = () => {
     const path = location.pathname;
     if (path.startsWith('/dashboard')) return 'Dashboard';
+    if (path.startsWith('/settings')) return 'Account & Settings';
+    if (path.startsWith('/kanban')) return 'Kanban Board';
+    if (path.startsWith('/companies')) return 'Companies & Accounts';
+    if (path.startsWith('/tasks')) return 'Follow-up Tasks';
+    if (path.startsWith('/activities')) return 'Activity Stream';
     if (path === '/leads/new') return 'Leads / New Lead';
     if (path.startsWith('/leads/')) {
       if (path.endsWith('/edit')) return 'Leads / Edit Lead';
       return 'Leads / Lead Profile';
     }
-    if (path.startsWith('/leads')) return 'Leads';
+    if (path.startsWith('/leads')) return 'Leads Table';
     return 'Dashboard';
   };
 
@@ -39,7 +45,6 @@ export const Header: React.FC<HeaderProps> = ({ onMenuClick }) => {
 
   return (
     <header className="h-[60px] bg-white border-b border-neutral-200/80 px-4 sm:px-6 flex items-center justify-between shrink-0 z-20 shadow-xs">
-      {/* Left: Menu & Breadcrumb */}
       <div className="flex items-center gap-3">
         {onMenuClick && (
           <button
@@ -58,9 +63,7 @@ export const Header: React.FC<HeaderProps> = ({ onMenuClick }) => {
         </div>
       </div>
 
-      {/* Right: Search & User Dropdown */}
       <div className="flex items-center gap-2.5 sm:gap-3">
-        {/* Quick Search Cmd+K Trigger */}
         <button
           onClick={() => setIsCommandPaletteOpen(true)}
           className="flex items-center gap-2 px-3 py-1.5 text-xs font-medium text-neutral-500 hover:text-neutral-900 bg-neutral-100/70 hover:bg-neutral-100 border border-neutral-200/80 rounded-lg transition-all cursor-pointer"
@@ -72,7 +75,6 @@ export const Header: React.FC<HeaderProps> = ({ onMenuClick }) => {
           </kbd>
         </button>
 
-        {/* User Profile Menu */}
         <div className="relative">
           <button
             onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
@@ -85,7 +87,6 @@ export const Header: React.FC<HeaderProps> = ({ onMenuClick }) => {
             <ChevronDown className="w-3.5 h-3.5 text-neutral-400" />
           </button>
 
-          {/* User Dropdown */}
           {isUserMenuOpen && (
             <>
               <div
@@ -97,7 +98,19 @@ export const Header: React.FC<HeaderProps> = ({ onMenuClick }) => {
                   <p className="font-semibold text-neutral-900 truncate">{user?.name || 'User'}</p>
                   <p className="text-[11px] text-neutral-500 truncate">{user?.email}</p>
                 </div>
-                <div className="border-t border-neutral-100 pt-1 mt-1">
+                <div className="py-1 border-b border-neutral-100">
+                  <button
+                    onClick={() => {
+                      setIsUserMenuOpen(false);
+                      navigate('/settings');
+                    }}
+                    className="w-full text-left px-3.5 py-1.5 font-semibold text-neutral-700 hover:bg-neutral-100 cursor-pointer flex items-center gap-2"
+                  >
+                    <SettingsIcon className="w-3.5 h-3.5 text-neutral-500" />
+                    <span>Account & Settings</span>
+                  </button>
+                </div>
+                <div className="pt-1">
                   <button
                     onClick={() => {
                       setIsUserMenuOpen(false);
@@ -115,23 +128,20 @@ export const Header: React.FC<HeaderProps> = ({ onMenuClick }) => {
         </div>
       </div>
 
-      {/* Command Palette Modal */}
       <CommandPalette
         isOpen={isCommandPaletteOpen}
         onClose={() => setIsCommandPaletteOpen(false)}
       />
 
-      {/* Logout Confirmation Modal */}
       <ConfirmModal
         isOpen={isLogoutModalOpen}
         onClose={() => setIsLogoutModalOpen(false)}
         onConfirm={logout}
         title="Log Out of LeadFlow?"
-        description="Are you sure you want to log out? You will need to sign back in to access your CRM leads."
+        description="Are you sure you want to log out?"
         confirmText="Log Out"
         cancelText="Cancel"
         variant="warning"
-        icon={<LogOut className="w-5 h-5 text-amber-600" />}
       />
     </header>
   );
